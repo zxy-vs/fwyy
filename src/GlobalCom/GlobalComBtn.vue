@@ -17,7 +17,7 @@
     <a href="javascript:;" class="btn3 bg2"><span>下载</span></a>
     <a href="javascript:;" class="btn3 bg3"
       ><span v-if="quan.commentCount">({{ NumberW(quan.commentCount) }})</span
-      ><span v-if="info.commentCount">({{ NumberW(info.commentCount) }})</span>
+      ><span v-else-if="info.commentCount">({{ NumberW(info.commentCount) }})</span>
       <span v-else>({{ NumberW(quan.mark) }})</span>
     </a>
   </div>

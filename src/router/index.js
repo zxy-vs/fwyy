@@ -12,7 +12,7 @@ const routes = [
       component:Discover
     },{
       path:'/discover/toplist',
-      component:()=>import('../components/FindMusic/Toplist.vue'),
+      component:()=>import('../components/FindMusic/Toplist.vue')
     },{
       path:'/discover/playlist',
       component:()=>import('../components/FindMusic/Playlist.vue')
