@@ -8,20 +8,20 @@ import {
 } from '../untils/TimeTran';
 export default createStore({
   state: {
-    isKeys: true,
-    isPlay: false,
-    isTrue: false,
-    playText: [],
-    currentTime: 0,
-    tst: null,
-    time: 0,
-    ids: 0,
-    audios: '',
-    picUrl: '',
-    songList: [],
-    songListIndex: 0,
-    isLoop:0,
-    isVolume:0,
+    isKeys: true,//下播放框锁定
+    isPlay: false,//播放暂停按键
+    isTrue: false,//登录进入退出
+    playText: [],//当前播放单曲的信息
+    currentTime: 0,//当前单曲的当前播放时长
+    tst: null,//定时器
+    time: 0,//当前单曲总时长
+    ids: 0,//当前单曲的id
+    audios: '',//当前单曲的播放地址
+    picUrl: '',//播放框的小图片
+    songList: [],//播放列表
+    songListIndex: 0,//播放列表的索引
+    isLoop:0,//播放下一首的类型 0，1，2
+    isVolume:0,//播放的当前音量
   },
   getters: {
     Transtime(state) {

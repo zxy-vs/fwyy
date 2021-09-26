@@ -39,8 +39,33 @@
             :quan="quan"
             :subscribedCount="subscribedCount"
             :info="info"
+            @playing = 'playing'
           />
         </div>
+      </div>
+      <div class="g_List">
+        <div class="g_Lhead">
+          <h2>歌曲列表</h2>
+          <span>{{ quan.trackCount }}首歌</span>
+          <div class="header_r">
+            播放：<strong>{{ quan.playCount }}</strong
+            >次
+          </div>
+        </div>
+        <a-table
+          size="small"
+          :pagination="false"
+          class="ant-table-striped"
+          :columns="columns"
+          :data-source="TpList"
+          bordered
+          rowKey="id"
+          :rowClassName="
+            (record, index) => (index % 2 === 1 ? 'table-striped' : null)
+          "
+          :customRow="customRow"
+        >
+        </a-table>
       </div>
     </div>
   </div>
@@ -52,9 +77,13 @@ import { useRoute, useRouter } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
 import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { Time } from "../../untils/TimeTrans";
+import { Times } from "../../untils/TimeTran";
+import { useStore } from 'vuex';
 export default {
   components: { GlobalComBtn },
   setup() {
+    const Router = useRouter();
+    const {state,commit,dispatch} = useStore()
     const Route = useRoute();
     const LList = reactive({
       indexs: Route.query.id ? Route.query.id : "19723756",
@@ -87,14 +116,73 @@ export default {
       },
     });
     watchEffect(() => {
-      ctt.getctt(Route.query.id);
-      LList.indexss(Route.query.id);
+      if (Route.path == "/discover/toplist"){
+        ctt.getctt(Route.query.id);
+        LList.indexss(Route.query.id);
+      }
     });
+    const columns = [
+      {
+        title: "",
+        width: 77,
+        dataIndex: "id",
+        customRender({ index }) {
+          return index + 1;
+        },
+        ellipsis: true,
+      },
+      {
+        title: "标题",
+        width: 326,
+        dataIndex: "name",
+        ellipsis: true,
+      },
+      {
+        title: "时长",
+        width: 91,
+        dataIndex: "dt",
+        customRender({ text }) {
+          return Times(text);
+        },
+        ellipsis: true,
+      },
+      {
+        title: "歌手",
+        width: 174,
+        dataIndex: "ar[0].name",
+        ellipsis: true,
+      },
+    ];
+    const customRow = (record, index) => {
+      return {
+        onclick: () => {
+          Router.push("/song?id=" + ctt.TpList[index].id);
+        },
+      };
+    };
+    const playing =async ()=>{
+      state.songList = ctt.TpList
+      state.songListIndex = 0
+      state.ids = ctt.TpList[state.songListIndex].id
+      await dispatch('getAudios',ctt.TpList[state.songListIndex].id)
+      await dispatch('getPlayText',ctt.TpList[state.songListIndex].id)
+      commit('isSetPlay')
+      let ao = document.querySelector('audio')
+      if (ao.played) {
+        ao.load();
+        ao.play();
+      } else {
+        ao.play();
+      }
+    }
     return {
       ...toRefs(LList),
       Route,
       ...toRefs(ctt),
       Time,
+      columns,
+      customRow,
+      playing
     };
   },
 };
@@ -219,6 +307,34 @@ export default {
           }
         }
       }
+    }
+    .g_List {
+      padding: 0 30px 40px 40px;
+      .g_Lhead {
+        width: 100%;
+        height: 35px;
+        border-bottom: 2px solid #c20c0c;
+        h2 {
+          float: left;
+          font-size: 20px;
+          font-weight: normal;
+          margin-bottom: 12px;
+        }
+        span {
+          float: left;
+          margin: 9px 0 0 20px;
+        }
+        .header_r {
+          float: right;
+          margin-top: 5px;
+          strong {
+            color: #c20c0c;
+          }
+        }
+      }
+    }
+    .ant-table-striped :deep(.table-striped) {
+      background-color: #fafafa;
     }
   }
 }

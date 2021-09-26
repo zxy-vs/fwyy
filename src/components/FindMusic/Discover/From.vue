@@ -6,14 +6,13 @@
         <dt>
           <div class="FromImg">
             <img v-lazy="`${item.coverImgUrl}?param=100y100`" alt="" />
-            <router-link to=""></router-link>
-            <!-- '/playlist/detail?id=' + item.id -->
+            <router-link :to="'/discover/toplist?id=' + item.id "></router-link>
           </div>
           <div class="FromLink">
-            <router-link to="#" class="FromName"
+            <router-link :to="'/discover/toplist?id=' + item.id" class="FromName"
               ><h3>{{ item.name }}</h3></router-link
             >
-            <!-- '/playlist/detail?id=' + item.id -->
+            <!--  -->
             <router-link to="#" class="FromPlay play"></router-link>
             <router-link to="#" class="FromPlay bgp"></router-link>
           </div>

@@ -3,7 +3,7 @@
     <div class="R_tabel_header">
       <h2>歌曲列表</h2>
       <span>{{ quan.trackCount }}首歌</span>
-      <span class="header_r">播放：{{ quan.playCount }}次</span>
+      <div class="header_r">播放：<strong>{{ quan.playCount }}</strong>次</div>
     </div>
     <a-table
       size="small"
@@ -25,7 +25,7 @@
 import { nextTick, onMounted, ref, toRef } from "@vue/runtime-core";
 import { Times } from "../../../untils/TimeTran";
 import { useRouter } from "vue-router";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 export default {
   props: ["quan", "data"],
   setup(props) {
@@ -67,21 +67,18 @@ export default {
         ellipsis: true,
       },
     ];
-      const Router = useRouter();
-// const {state} = useStore()
-// const indexs = toRef(state,'index')
+    const Router = useRouter();
     const customRow = (record, index) => {
       return {
         onclick: () => {
-          // indexs.value = index
-          Router.push('/song?id='+props.data[index].id)
+          Router.push("/song?id=" + props.data[index].id);
         },
       };
     };
-    
+
     return {
       columns,
-      customRow
+      customRow,
     };
   },
 };
@@ -103,6 +100,10 @@ export default {
   }
   .header_r {
     float: right;
+    margin-top: 5px;
+    strong {
+      color: #c20c0c;
+    }
   }
 }
 
