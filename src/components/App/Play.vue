@@ -74,20 +74,14 @@
         <router-link to="#" class="share" title="分享"></router-link>
       </div>
       <div class="f_ctrl">
-        <div class="m_vol" v-show="isTT">
+        <div class="m_vol" v-show="isTT" >
           <div class="f_barbg"></div>
           <div class="vbg">
             <div class="curr" ref="curr"></div>
             <span class="btn" ref="btn"></span>
           </div>
         </div>
-        <a
-          href="javascript:;"
-          class="f_volume"
-          title="音量"
-          @click="isTT = !isTT"
-          ref="fv"
-        ></a>
+        <a href="javascript:;" class="f_volume" title="音量" ref="fv"></a>
         <a href="javascript:;" class="mode" title="循环" ref="mode"></a>
         <span class="f_add">
           <span class="tip">已添加到播放列表</span>
@@ -184,17 +178,17 @@ export default {
         if (state.isLoop == 0) {
           // state.isLoop=1;
           commit("setisLoop", 1);
-          setT('单曲循环')
+          setT("单曲循环");
           this.className = modeList[state.isLoop];
         } else if (state.isLoop == 1) {
           commit("setisLoop", 2);
           // state.isLoop=2;
-          setT('随机')
+          setT("随机");
           this.className = modeList[state.isLoop];
         } else if (state.isLoop == 2) {
           commit("setisLoop", 0);
           // state.isLoop = 0;
-           setT('循环')
+          setT("循环");
           this.className = modeList[state.isLoop];
         }
       };
@@ -206,12 +200,12 @@ export default {
           randoms();
         }
       };
-      function setT(text){
-        clearTimeout(tt)
-        ms.value.innerHTML = text
-        ms.value.style.display = 'block'
+      function setT(text) {
+        clearTimeout(tt);
+        ms.value.innerHTML = text;
+        ms.value.style.display = "block";
         let tt = setTimeout(() => {
-          ms.value.style.display = 'none'
+          ms.value.style.display = "none";
         }, 2000);
       }
       let tbtn = cur.value.children[0];
@@ -260,9 +254,21 @@ export default {
         function bfqingshu() {
           bf.parentNode.onmousemove = null;
           bf.parentNode.onmouseup = null;
-          bf.parentNode.onmouseleave = null;
+          bf.parentNode.onmouseleave =null;
         }
       };
+      fv.value.onclick = function () {
+          isTT.value = !isTT.value;
+          bf.parentNode.onmouseover = function () {
+            isTT.value = true;
+          };
+          bf.parentNode.addEventListener('mouseleave',function () {
+            document.documentElement.onclick = function () {
+              isTT.value = false;
+              document.documentElement.onclick = null;
+            }
+          })
+        };
     });
 
     return {

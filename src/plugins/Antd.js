@@ -8,7 +8,8 @@ import {
     Icon,
     Avatar,
     Badge,
-    Input
+    Input,
+    Pagination
 } from 'ant-design-vue'
 export default {
     install(App) {
@@ -20,5 +21,6 @@ export default {
         App.use(Avatar)
         App.use(Badge)
         App.use(Input)
+        App.use(Pagination)
     }
 }

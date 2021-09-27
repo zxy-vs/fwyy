@@ -5,8 +5,9 @@
         <ul class="s_nav">
           <li v-for="(item, index) of list" :key="index">
             <router-link :to="item.path"
-              ><em>{{ item.title }}</em></router-link
-            >
+              ><em :style="index == 2 ? 'padding: 0 15px 0 11px;' : ''"
+                >{{ item.title }}<i v-if="index == 2"></i></em
+            ></router-link>
           </li>
         </ul>
       </div>
@@ -39,16 +40,17 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #c20c0c;
-  margin-top:-12px;//有问题
+  margin-top: -12px; //有问题
   .find {
     width: 1100px;
-    height: 34px;
+    height: 35px;
     margin: auto;
     .s_nav {
       padding-left: 180px;
       li {
         float: left;
         list-style: none;
+        position: relative;
         a {
           text-decoration: none;
           color: #fff;
@@ -67,6 +69,15 @@ export default {
               background-color: #9b0909;
               border-radius: 20px;
             }
+          }
+          i {
+            position: absolute;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            top: 9px;
+            background: url("../../public/static/vvvlogo.png") no-repeat;
+            background-size: cover;
           }
         }
       }

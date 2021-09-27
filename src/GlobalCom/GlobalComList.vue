@@ -1,7 +1,8 @@
 <template>
 <div>
     <div class="comList">
-    <img v-lazy='`${list.picUrl}?param=140y140`' alt="" />
+    <img v-if="list.coverImgUrl" :src="`${list.coverImgUrl}?param=140y140`" alt="" />
+    <img v-if="list.picUrl" v-lazy='`${list.picUrl}?param=140y140`' alt="" />
     <router-link :to="'/playlist?id='+list.id" class="comLink"></router-link>
     <div class="comBottom">
       <router-link to="#" class="bottomLink"></router-link>
@@ -15,7 +16,6 @@
     >
   </p>
 </div>
-
 </template>
 
 <script>

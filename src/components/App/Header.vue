@@ -109,13 +109,13 @@ export default {
       .logo {
         float: left;
         margin: 0;
-        width: 177px;
+        width: 176px;
         height: 70px;
         padding-right: 20px;
         background: #242424 url("../../assets/img/topbar.png") no-repeat 0 0;
         a {
           display: inline-block;
-          width: 177px;
+          width: 176px;
           height: 70px;
           text-decoration: none;
           color: rgba(255, 255, 255, 0);
@@ -171,7 +171,7 @@ export default {
               left: 50%;
               bottom: 0;
               border: 0;
-              border-bottom: 7px solid #c20c0c;
+              border-bottom: 6px solid #c20c0c;
               border-left: 6px solid transparent;
               border-right: 6px solid transparent;
               margin-left: -6px;
@@ -201,10 +201,10 @@ export default {
         height: 32px;
         float: right;
         margin-top: 19px;
-        background-position: 0 -99px;
         border-radius: 32px;
         position: relative;
-        background: #fff url("../../assets/img/topbar.png") no-repeat 0 -98px;
+        background: #fff url("../../assets/img/topbar.png") no-repeat;
+         background-position: 0 -99px;
         .search {
           color: #333;
           line-height: 16px;

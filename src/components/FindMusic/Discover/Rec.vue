@@ -18,11 +18,11 @@ export default {
       list: ["华语", "流行", "摇滚", "民谣", "电子"],
       titleUrl: "/discover/playlist",
       listUrl: [
-        "/discover/playlist",
-        "/discover/playlist",
-        "/discover/playlist",
-        "/discover/playlist",
-        "/discover/playlist",
+        "/discover/playlist/?cat=华语&order=hot",
+        "/discover/playlist/?cat=流行&order=hot",
+        "/discover/playlist/?cat=摇滚&order=hot",
+        "/discover/playlist/?cat=民谣&order=hot",
+        "/discover/playlist/?cat=电子&order=hot",
       ],
       moreUrl: "/discover/playlist",
     });
