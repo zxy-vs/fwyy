@@ -1,4 +1,4 @@
-# music
+#  仿网易云音乐
 
 #  前端页面开发
 
@@ -13,15 +13,6 @@
 ```
 yarn install
 ```
-
-
-
-
-
-
-
-
-
 ### Compiles and hot-reloads for development
 ```
 yarn serve
