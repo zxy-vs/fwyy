@@ -257,10 +257,12 @@ export default {
           bf.parentNode.onmouseleave =null;
         }
       };
-      fv.value.onclick = function () {
+      fv.value.onclick = function (e) {
+        e.stopPropagation();
           isTT.value = !isTT.value;
           bf.parentNode.onmouseover = function () {
             isTT.value = true;
+            document.documentElement.onclick = null;
           };
           bf.parentNode.addEventListener('mouseleave',function () {
             document.documentElement.onclick = function () {
@@ -268,6 +270,9 @@ export default {
               document.documentElement.onclick = null;
             }
           })
+          document.documentElement.onclick = function () {
+              isTT.value = false;
+            }
         };
     });
 
@@ -350,7 +355,7 @@ export default {
     .btns {
       float: left;
       width: 137px;
-      padding: 6px 0 0 0;
+      padding: 5px 0 0 0;
       a {
         display: block;
         background: url("../../../public/static/playbar.png");

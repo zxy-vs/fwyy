@@ -43,7 +43,7 @@
       </li>
     </ul>
     <div class="PL_pag">
-      <a-pagination v-model:current="current" :total="380" />
+      <a-pagination v-model:current="current" :total="total" />
     </div>
   </div>
 </template>
@@ -60,6 +60,7 @@ export default {
       Hlist: [],
       HHlist: [],
       cat:'',
+      total:0,
       async getList(order='hot', cat='全部', offset=0) {
         await axios
           .get(
@@ -70,6 +71,7 @@ export default {
           .then((res) => {
             this.cat = cat
             this.list = res.playlists;
+            this.total = Math.ceil(res.total/35)*10
           });
       },
       async getHead() {
@@ -108,10 +110,12 @@ export default {
     const select = ref(null);
     const HList = ref(null);
     onMounted(() => {
-      select.value.onclick = function () {
+      select.value.onclick = function (e) {
+        e.stopPropagation();
         isHead.value = !isHead.value;
         HList.value.onmouseover = function () {
             isHead.value = true;
+            document.documentElement.onclick=null
         };
         HList.value.onmouseleave = function () {
           document.documentElement.onclick = function () {
@@ -119,6 +123,9 @@ export default {
             document.documentElement.onclick=null
           };
         };
+        document.documentElement.onclick = function () {
+            isHead.value = false;
+          };
       };
     });
     watchEffect(() => {
