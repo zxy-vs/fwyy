@@ -15,11 +15,10 @@
             </p>
             <p class="n_b_x">
               <span v-for="(items, index) of item.artists" :key="index">
-                <router-link to="">{{ items.name }} </router-link>
+                <router-link :to="'/artist?id='+item.artist.id">{{ items.name }} </router-link>
                 <i v-if="item.artists.length - 1 != index">&nbsp;/&nbsp;</i>
               </span>
             </p>
-            <!-- '/artist?id='+item.artist.id -->
           </li>
         </ul>
       </div>

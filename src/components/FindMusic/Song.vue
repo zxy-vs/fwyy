@@ -16,12 +16,12 @@
           <p class="t_a">
             歌手：
             <span v-for="(item, index) of ar" :key="index">
-              <router-link to="#">{{ item.name }}</router-link>
+              <router-link :to="'/artist?id='+item.id">{{ item.name }}</router-link>
               <span v-if="!(index==ar.length-1)"> / </span>
             </span>
           </p>
           <p class="t_a">
-            所属专辑：<router-link to="#">{{ al.name }}</router-link>
+            所属专辑：<router-link :to="'/album?id='+al.id">{{ al.name }}</router-link>
           </p>
           <div class="t_btn">
             <global-com-btn :quan="quan" :info="info" @getids="getid" />

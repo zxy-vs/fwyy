@@ -45,7 +45,7 @@
               v-for="(item, index) of playText.ar"
               :key="index"
             >
-              <router-link to="#" :title="item.name">{{
+              <router-link :to="'/artist?id='+item.id" :title="item.name">{{
                 item.name
               }}</router-link>
               <span v-if="!(index == playText.ar.length - 1)"
@@ -85,7 +85,7 @@
         <a href="javascript:;" class="mode" title="循环" ref="mode"></a>
         <span class="f_add">
           <span class="tip">已添加到播放列表</span>
-          <router-link to="#" title="播放列表">11</router-link>
+          <router-link to="#" title="播放列表">{{songList.length}}</router-link>
         </span>
         <div class="mode_show" ref="ms">随机</div>
       </div>

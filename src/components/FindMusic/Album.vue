@@ -50,8 +50,7 @@ export default {
       },
       async getquanList(offset,area='ALL') {
         await axios.get(`/api/album/new?offset=${(offset-1)*35}&limit=35&area=${area}`).then(res=>{
-          //  console.log(offset-1);
-           this.quanList = res.albums
+            this.quanList = res.albums
             this.total = Math.ceil(res.total/35)*10
         })
       },

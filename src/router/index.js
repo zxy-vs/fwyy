@@ -34,6 +34,9 @@ const routes = [
     },{
       path:'/album',
       component:()=>import('../components/FindMusic/Albumed.vue')
+    },{
+      path:'/artist',
+      component:()=>import('../components/FindMusic/Artisted.vue')
     }]
   }, {
     path: '/MyMusic',

@@ -12,7 +12,7 @@
     </p>
     <p class="n_b_xs">
       <span v-for="(items, index) of item.artists" :key="index">
-        <router-link to="">{{ items.name }} </router-link>
+        <router-link :to="'/artist?id='+items.id">{{ items.name }} </router-link>
         <i v-if="item.artists.length - 1 != index">&nbsp;/&nbsp;</i>
       </span>
     </p>

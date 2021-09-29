@@ -18,7 +18,7 @@
               <b>歌手：</b>
               <span v-for="(item, index) of album.artists" :key="index">
                 <!--  -->
-                <router-link to="#">
+                <router-link :to="'/artist?id='+item.id">
                   {{ item.name }}
                 </router-link>
                 <i v-if="album.artists.length - 1 != index">&nbsp;/&nbsp;</i>
@@ -28,7 +28,7 @@
               <b>发行时间：</b>
               <span>{{Time(album.publishTime)}}</span>
             </div>
-            <div class="t_tag">
+            <div class="t_tag" v-if="album.company">
               <b>发行公司：</b>
                 <span>{{album.company}}</span>
             </div>

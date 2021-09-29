@@ -34,8 +34,9 @@ export default {
       emit("getids");
       emit("playing");
       clearInterval(state.tst);
+      const pg = document.querySelector(".c_cur")
       state.tst = setInterval(() => {
-        document.querySelector(".c_cur").style.width =
+        pg.style.width =
           (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
       }, 1000 / 60);
     };
