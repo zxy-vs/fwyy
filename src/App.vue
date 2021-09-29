@@ -132,4 +132,7 @@ li{
   margin:0;
   padding: 0;
 }
+audio{
+  display: none;
+}
 </style>
