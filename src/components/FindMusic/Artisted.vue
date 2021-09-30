@@ -24,6 +24,7 @@
           :GSList="GSList"
           :Desc="Desc"
           :Album='Album'
+          :Mv='Mv'
         ></component>
       </keep-alive>
     </div>
@@ -52,6 +53,7 @@ export default {
       RList: [],
       Desc: [],
       Album: [],
+      Mv:[],
       async getGSList(id) {
         await axios.get("/api/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
@@ -65,8 +67,12 @@ export default {
       },
       async getAlbum(id) {
         await axios.get("/api/artist/album?limit=999&id=" + id).then((res) => {
-          console.log(res);
           this.Album = res.hotAlbums;
+        });
+      },
+      async getMv(id) {
+        await axios.get("/api/artist/mv?id=" + id).then((res) => {
+          this.Mv = res.mvs;
         });
       },
     });
@@ -75,6 +81,7 @@ export default {
         GS.getGSList(Route.query.id);
         GS.getDesc(Route.query.id);
         GS.getAlbum(Route.query.id);
+        GS.getMv(Route.query.id);
       }
     });
     return {

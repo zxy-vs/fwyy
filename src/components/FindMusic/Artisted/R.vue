@@ -38,7 +38,7 @@
         <td width="94" style="width: 94px">
           <div class="hd">
             <span class="num">{{ index + 1 }}</span>
-            <span class="ply"></span>
+            <span :class="['ply',item.id==state.ids?'ccolor':'']" @click="Played(index)"></span>
           </div>
         </td>
         <td width="309" style="width: 309px">
@@ -47,7 +47,7 @@
               <router-link :to="'/song?id=' + item.id">{{
                 item.name
               }}</router-link>
-              <span class="mv"></span>
+              <router-link class="mv" v-if="item.mv" :to="'/mv?id='+item.mv"></router-link>
             </span>
           </div>
         </td>
@@ -71,20 +71,38 @@
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
+import { ref} from "@vue/reactivity";
 import { Times } from "../../../untils/TimeTran";
 import { useStore } from "vuex";
 export default {
   props: ["RList"],
   setup(props) {
-    const { state, commit, dispatch } = useStore();
+    const { state,dispatch } = useStore();
     const select = ref(["热门单曲", "作词作品", "作曲作品"]);
     const indexs = ref(0);
+    const ao = document.querySelector("audio");
     const Play = async () => {
-      const ao = document.querySelector("audio");
       state.songList = props.RList;
       state.songListIndex = 0;
       state.ids = props.RList[state.songListIndex].id;
+      await dispatch("getAudios", state.ids);
+      await dispatch("getPlayText", state.ids);
+      clearInterval(state.tst);
+      const pg = document.querySelector(".c_cur");
+      state.tst = setInterval(() => {
+        pg.style.width = (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+      }, 1000 / 60);
+      state.isPlay = true;
+      if (ao.played) {
+        ao.load();
+        ao.play();
+      } else {
+        ao.play();
+      }
+    };
+     const Played = async (index) => {
+      console.log(props.RList[index].id);
+      state.ids = props.RList[index].id;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);
@@ -105,7 +123,9 @@ export default {
       indexs,
       Times,
       Play,
-    };
+      Played,
+      state
+    }
   },
 };
 </script>
@@ -296,6 +316,9 @@ export default {
             width: 25px;
             margin-left: 5px;
             color: #999;
+          }
+          .ccolor{
+            background-position: -20px -128px;
           }
         }
         .f_cb {

@@ -38,7 +38,7 @@
             :title="playText.name"
             >{{ playText.name }}</router-link
           >
-          <router-link to="#" class="p_mv" title="MV"></router-link>
+          <router-link title="MV" class="p_mv" v-if="playText.mv" :to="'/mv?id='+playText.mv"></router-link>
           <span class="p_author ellipsis" v-if="playText.ar">
             <span
               class="p_author_c"

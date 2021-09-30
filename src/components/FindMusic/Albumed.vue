@@ -76,7 +76,6 @@ export default {
       subscribedCount: 0,
       async getquan(id) {
         await axios.get("/api/album?id=" + id).then((res) => {
-          console.log(res);
           this.quan = res.album;
           this.album = res.album
           this.info = res.album.info
