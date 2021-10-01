@@ -113,7 +113,6 @@ export default {
             `/api/artist/list?type=${type}&area=${area}&initial=${initial}&limit=100`
           )
           .then((res) => {
-            console.log(res.artists);
             this.GList = res.artists;
           });
       },

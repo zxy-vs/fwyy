@@ -5,14 +5,15 @@
       <router-view></router-view>
     </main>
     <div class="fixed_play" ref="keys">
-      <Play 
-       @pauseAo='PauseAo'
-       @playAo='PlayAo'
-       @jump='jump'
-       />
+      <Play
+        v-if="Route.path != '/mv'"
+        @pauseAo="PauseAo"
+        @playAo="PlayAo"
+        @jump="jump"
+      />
     </div>
     <Footer />
-    <audio :src="audios" ref="ao" :loop='isLoop==1?true:false'></audio>
+    <audio :src="audios" ref="ao" :loop="isLoop == 1 ? true : false"></audio>
   </div>
 </template>
 
@@ -20,50 +21,52 @@
 import Header from "./components/App/Header.vue";
 import Footer from "./components/App/Footer.vue";
 import Play from "./components/App/Play.vue";
-import { ref,toRefs} from "@vue/reactivity";
+import { ref, toRefs } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
-import {useStore} from 'vuex'
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 export default {
   components: { Header, Footer, Play },
   setup() {
+    const Route = useRoute();
     const keys = ref(null);
     const ao = ref(null);
-    const{state,commit} = useStore();
-    const time = ref(null)
-    const PauseAo = ()=>{
-        ao.value.pause()
-    }
-    const PlayAo = ()=>{
-        ao.value.play()
-    }
-    const jump = ()=>{
-        ao.value.currentTime = state.currentTime
-    }
-     const randoms = ()=>{
-      let index = Math.floor(Math.random()*(state.songList.length))
-      state.songListIndex = index
-      storeFu()
-    }
+    const { state, commit } = useStore();
+    const time = ref(null);
+    const PauseAo = () => {
+      ao.value.pause();
+    };
+    const PlayAo = () => {
+      ao.value.play();
+    };
+    const jump = () => {
+      ao.value.currentTime = state.currentTime;
+    };
+    const randoms = () => {
+      let index = Math.floor(Math.random() * state.songList.length);
+      state.songListIndex = index;
+      storeFu();
+    };
     onMounted(() => {
-      ao.value.ontimeupdate = function(){
-        state.currentTime = this.currentTime
-        this.volume = state.isVolume
-      }
+      ao.value.ontimeupdate = function () {
+        state.currentTime = this.currentTime;
+        this.volume = state.isVolume;
+      };
       keys.value.onmouseenter = me;
       keys.value.onmouseleave = ml;
       let lock = keys.value.querySelector(".key");
       if (state.isKeys) {
-          lock.style.backgroundPositionX = "-80px";
-          keys.value.onmouseenter = me;
-          keys.value.onmouseleave = ml;
-        } else {
-          lock.style.backgroundPositionX = "-100px";
-          keys.value.onmouseenter = null;
-          keys.value.onmouseleave = null;
-          keys.value.style.transform = "translateY(0)";
-        }
+        lock.style.backgroundPositionX = "-80px";
+        keys.value.onmouseenter = me;
+        keys.value.onmouseleave = ml;
+      } else {
+        lock.style.backgroundPositionX = "-100px";
+        keys.value.onmouseenter = null;
+        keys.value.onmouseleave = null;
+        keys.value.style.transform = "translateY(0)";
+      }
       lock.onclick = function () {
-        commit('isTranKeys')
+        commit("isTranKeys");
         if (state.isKeys) {
           this.style.backgroundPositionX = "-80px";
           keys.value.onmouseenter = me;
@@ -75,7 +78,6 @@ export default {
           keys.value.onmouseleave = null;
         }
       };
-    
     });
     function me() {
       this.style.transform = "translateY(0px)";
@@ -85,8 +87,14 @@ export default {
     }
     return {
       keys,
-      ...toRefs(state),ao,PauseAo,PlayAo,jump,randoms
-    }
+      ...toRefs(state),
+      ao,
+      PauseAo,
+      PlayAo,
+      jump,
+      randoms,
+      Route,
+    };
   },
 };
 </script>
@@ -127,12 +135,12 @@ main {
   right: 0;
   zoom: 1;
 }
-li{
+li {
   list-style: none;
-  margin:0;
+  margin: 0;
   padding: 0;
 }
-audio{
+audio {
   display: none;
 }
 </style>
