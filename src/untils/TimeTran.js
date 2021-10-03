@@ -1,8 +1,11 @@
 export const Times = (num)=>{
-    var date = new Date(num)
-    var m = date.getMinutes()
+    var h = parseInt(num/1000/60/60%24)
+    var m = parseInt(num/1000/60%60)
+    var s = parseInt(num/1000%60)
     m=m<10?'0'+m:m
-    var s= date.getSeconds()
+    if(h>0){
+        m=h*60+parseInt(m)
+    }
     s=s<10?'0'+s:s
     return m+':'+s;
 }

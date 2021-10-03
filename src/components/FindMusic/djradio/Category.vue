@@ -181,6 +181,10 @@ export default {
             font-size: 18px;
             font-weight: bold;
             color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+            ;
           }
           a:hover {
             text-decoration: underline;
