@@ -73,6 +73,7 @@ export default {
       subscribedCount:0,
       async getquan(id) {
         await axios.get("/api/playlist/detail?id=" + id).then((res) => {
+          console.log(res.playlist.tracks)
           this.quan = res.playlist;
           this.creator = res.playlist.creator;
           this.data = res.playlist.tracks;

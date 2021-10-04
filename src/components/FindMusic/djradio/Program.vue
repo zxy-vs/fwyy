@@ -56,7 +56,7 @@
       <div class="n-songtb">
         <div class="n_title">
           <span class="strong">节目包含歌曲列表</span>
-          <span class="hui">（{{SongList.length}}首歌）</span>
+          <span class="hui">（{{ SongList.length }}首歌）</span>
         </div>
         <div class="n_list">
           <table class="R_list" v-if="SongList.length">
@@ -98,11 +98,19 @@
                 </div>
               </td>
               <td width="90" style="width: 90px">
-                <router-link
-                  :to="'/artist?id=' + item.artists[0].id"
-                  class="al"
-                  >{{ item.artists[0].name }}</router-link
-                >
+                <div class="name">
+                  <template
+                    v-for="(items, indexs) of item.artists"
+                    :key="indexs"
+                  >
+                    <router-link :to="'/artist?id=' + items.id" class="ar">{{
+                      items.name
+                    }}</router-link>
+                    <span class="line" v-if="item.artists.length - 1 != indexs"
+                      >/</span
+                    >
+                  </template>
+                </div>
               </td>
               <td width="89" style="width: 90px">
                 <router-link :to="'/album?id=' + item.album.id" class="al1">{{
@@ -126,7 +134,7 @@ import { Times } from "../../../untils/TimeTran";
 import { useStore } from "vuex";
 export default {
   setup() {
-    const { state,commit,dispatch } = useStore();
+    const { state, commit, dispatch } = useStore();
     const {
       query: { id: id },
     } = useRoute();
@@ -152,7 +160,7 @@ export default {
       const space = /\n/g;
       return text.replace(space, "<br>");
     };
-    const ao = document.querySelector('audio')
+    const ao = document.querySelector("audio");
     const Played = async (index) => {
       state.ids = PGM.SongList[index].id;
       await dispatch("getAudios", state.ids);
@@ -180,7 +188,8 @@ export default {
       clearInterval(state.tst);
       const pg = document.querySelector(".c_cur");
       state.tst = setInterval(() => {
-        pg.style.width = (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+        pg.style.width =
+          (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
       }, 1000 / 60);
       state.isPlay = true;
       if (ao.played) {
@@ -196,7 +205,8 @@ export default {
       nHbr,
       Times,
       state,
-      Played,Play
+      Played,
+      Play,
     };
   },
 };
@@ -611,15 +621,36 @@ export default {
                   background-position: -81px -174px;
                 }
               }
-              .al {
-                float: left;
-                display: block;
-                width: 48px;
-                color: #333;
+              .name {
+                max-width: 100%;
+                height: 18px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                .ar {
+                  float: left;
+                  display: block;
+                  color: #333;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .line {
+                  float: left;
+                }
+                .ar:hover {
+                  text-decoration: underline;
+                }
               }
+              // .al {
+              //   float: left;
+              //   display: block;
+              //   width: 48px;
+              //   color: #333;
+              //   white-space: nowrap;
+              //   overflow: hidden;
+              //   text-overflow: ellipsis;
+              // }
               .al1 {
                 float: left;
                 display: block;
