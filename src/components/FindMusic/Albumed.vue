@@ -59,6 +59,7 @@ import {reactive,toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { Time } from "../../untils/TimeTrans";
+// import { nHbr } from "../../untils/nHbr";
 import { useStore } from "vuex";
 import AlbList from './Albumed/AlbList.vue';
 export default {
@@ -206,9 +207,11 @@ div {
       .mains_l_center{
         float: left;
         width: 100%;
+        max-height: 200px;
         margin-top: 20px;
         line-height: 18px;
         overflow: hidden;
+        text-overflow: ellipsis;
       } 
       .mains_l_bottom {
         width: 100%;

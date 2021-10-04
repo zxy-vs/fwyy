@@ -66,7 +66,6 @@ export default {
       total: 0,
       async getTList(id) {
         await axios.get("/api/dj/recommend/type?type=" + id).then((res) => {
-          console.log(res);
           this.TList = res.djRadios;
           this.TList.length = 5;
         });
@@ -75,7 +74,6 @@ export default {
         await axios
           .get(`/api/dj/radio/hot?cateId=${id}&limit=30&offset=${offset * 30}`)
           .then((res) => {
-            console.log(res);
             this.RList = res.djRadios;
             this.total = Math.ceil((res.count / 30) * 10);
           });

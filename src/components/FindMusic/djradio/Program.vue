@@ -138,7 +138,6 @@ export default {
       SongList: [],
       async getList(id) {
         await axios.get("/api/dj/program/detail?id=" + id).then((res) => {
-          console.log(res.program.songs);
           this.List = res.program;
           this.Radio = res.program.radio;
           this.mainSong = res.program.mainSong;
@@ -155,7 +154,6 @@ export default {
     };
     const ao = document.querySelector('audio')
     const Played = async (index) => {
-      console.log(PGM.SongList[index].id);
       state.ids = PGM.SongList[index].id;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);

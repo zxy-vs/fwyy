@@ -27,50 +27,104 @@
             </a>
           </div>
           <p>
-            <router-link :to="'/discover/djradio/category?id=' + List.categoryId">{{
-              List.category
-            }}</router-link>
+            <router-link
+              :to="'/discover/djradio/category?id=' + List.categoryId"
+              >{{ List.category }}</router-link
+            >
             {{ List.desc }}
           </p>
         </div>
       </div>
-      <div class="n_songtb"></div>
+      <div class="n_songtb">
+        <div class="n_tit">
+          <h3>节目列表</h3>
+          <span>共{{ count }}期</span>
+        </div>
+        <table class="n_list" v-if="songList.length">
+          <tr
+            v-for="(item, index) of songList"
+            :key="index"
+            :class="index % 2 != 0 ? '' : 'even'"
+          >
+            <td width="82" style="width: 82px">
+              <div class="hd">
+                <span class="num">{{songList.length-index}}</span>
+                <span
+                  :class="['ply', item.id == state.ids ? 'ccolor' : '']"
+                ></span>
+              </div>
+            </td>
+            <td width="240" style="width: 240px">
+              <div class="f_cb">
+                <span class="txt">
+                  <router-link :to="'/program?id=' + item.id">{{
+                    item.name
+                  }}</router-link>
+                </span>
+                <div class="opt">
+                  <a href="javascript:;" class="a"></a>
+                  <a href="javascript:;" class="f"></a>
+                  <a href="javascript:;" class="x"></a>
+                </div>
+              </div>
+            </td>
+            <td width="80" style="width: 80px">
+              <span class="t">播放{{ item.listenerCount }}</span>
+            </td>
+            <td width="90" style="width: 90px">
+              <span class="t">赞{{ item.likedCount }}</span>
+            </td>
+            <td width="86" style="width: 86px">
+              <span class="t hui">{{ Time(item.createTime) }}</span>
+            </td>
+            <td width="60" style="width: 60px">
+              <span class="t hui">{{ Times(item.duration) }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
     <div class="dj_r"></div>
   </div>
 </template>
 
 <script>
+import { Times } from "../../../untils/TimeTran";
+import { Time } from "../../../untils/TimeTrans";
 import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 export default {
   setup() {
     const {
       query: { id: id },
     } = useRoute();
+    const { state,commit,dispatch } = useStore();
     const Djs = reactive({
       List: [],
       dj: [],
-      songList:[],
-      count:0,
+      songList: [],
+      count: 0,
       async getList(id) {
         await axios.get("/api/dj/detail?rid=" + id).then((res) => {
           this.List = res.data;
           this.dj = res.data.dj;
         });
       },
-      async getSongList(id){
-        await axios.get("/api/dj/program?limit=999&rid="+id).then((res) => {
-          console.log(res.programs);
-          this.songList = res.programs
-          this.count = res.count
+      async getSongList(id) {
+        await axios.get("/api/dj/program?limit=999&rid=" + id).then((res) => {
+          this.songList = res.programs;
+          this.count = res.count;
         });
-      }
+      },
     });
     Djs.getList(id);
     Djs.getSongList(id);
     return {
       ...toRefs(Djs),
+      state,
+      Times,
+      Time
     };
   },
 };
@@ -89,7 +143,7 @@ export default {
     padding: 47px 30px 40px 39px;
     .djs_tit {
       width: 640px;
-      height: 200px;
+      min-height: 200px;
       .djs_img {
         float: left;
         width: 200px;
@@ -282,6 +336,140 @@ export default {
     .n_songtb {
       width: 640px;
       margin-top: 27px;
+      .n_tit {
+        height: 35px;
+        border-bottom: 2px solid #c20c0c;
+        h3 {
+          float: left;
+          font-size: 20px;
+          line-height: 30px;
+          margin: 0;
+        }
+        span {
+          float: left;
+          color: #999;
+          margin: 9px 0 0 20px;
+        }
+      }
+      .n_list {
+        width: 100%;
+        border: none;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 1px solid #d9d9d9;
+        border-width: 0 1px 1px 1px;
+        tr {
+          background-color: #f7f7f7;
+          td {
+            height: 55px;
+            position: relative;
+            margin: 0;
+            .hd {
+              height: 18px;
+              padding: 0px;
+              margin: 0 10px;
+              .ply {
+                margin: auto;
+                float: right;
+                display: block;
+                width: 17px;
+                height: 17px;
+                cursor: pointer;
+                background: url("../../../../public/static/table.png") no-repeat;
+                background-position: 0 -103px;
+              }
+              .ply:hover {
+                background-position-y: -128px;
+              }
+              .num {
+                margin-left: 10px;
+                color: #999;
+              }
+              .ccolor {
+                background-position: -20px -128px;
+              }
+            }
+            .f_cb {
+              width: 230px;
+              height: 18px;
+              margin-right: 10px;
+              .txt {
+                position: relative;
+                display: inline-block;
+                line-height: 18px;
+                max-width: 100%;
+                border: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                a {
+                  color: #333;
+                  height: 55px;
+                }
+                a:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+            .opt {
+              display: none;
+              position: absolute;
+              right: 0;
+              bottom: 18px;
+              a {
+                float: left;
+                margin-top: 2px;
+                width: 18px;
+                height: 16px;
+                margin-right: 4px;
+                background: url("../../../../public/static/table.png") no-repeat;
+              }
+              .a {
+                width: 13px;
+                height: 13px;
+                background: url("../../../../public/static/icon.png") no-repeat;
+                background-position: 0 -700px;
+              }
+              .f {
+                background-position: 0 -195px;
+              }
+              .x {
+                background-position: -81px -174px;
+              }
+            }
+            .t {
+              margin: 0 10px;
+              color: #666;
+            }
+            .hui {
+              color: #999;
+            }
+          }
+        }
+        tr:hover {
+          background-color: #e6e6e6;
+          td {
+            .f_cb {
+              width: 190px;
+            }
+            .opt {
+              display: block;
+              .a:hover {
+                background-position-x: -22px;
+              }
+              .f:hover {
+                background-position-x: -20px;
+              }
+              .x:hover {
+                background-position-x: -104px;
+              }
+            }
+          }
+        }
+        .even {
+          background-color: #fff;
+        }
+      }
     }
   }
   .djs_r {
