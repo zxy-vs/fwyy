@@ -180,6 +180,9 @@ export default {
             line-height: 18px;
             height: 18px;
             display: flex;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             a {
               float: left;
               display: inline;

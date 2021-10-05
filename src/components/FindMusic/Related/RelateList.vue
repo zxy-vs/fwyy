@@ -56,7 +56,7 @@
       <td width="90" style="width: 90px">
         <div class="name">
           <template v-for="(items, indexs) of item.ar" :key="indexs">
-            <router-link :to="'/album?id=' + items.id" class="ar">{{
+            <router-link :to="'/artist?id=' + items.id" class="ar">{{
               items.name
             }}</router-link>
             <span class="line" v-if="item.ar.length - 1 != indexs">/</span>

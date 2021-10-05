@@ -126,7 +126,7 @@
             <td width="173" style="width: 173px">
               <div class="name">
                 <template v-for="(items, indexs) of item.ar" :key="indexs">
-                  <router-link :to="'/album?id=' + items.id" class="ar">{{
+                  <router-link :to="'/artist?id=' + items.id" class="ar">{{
                     items.name
                   }}</router-link>
                   <span class="line" v-if="item.ar.length - 1 != indexs"
@@ -179,7 +179,6 @@ export default {
       info: [],
       async getctt(id = "19723756") {
         await axios.get("/api/playlist/detail?id=" + id).then((res) => {
-          console.log(res.playlist.tracks);
           this.quan = res.playlist;
           this.subscribedCount = res.playlist.subscribedCount;
           this.TpList = res.playlist.tracks;
@@ -536,7 +535,9 @@ export default {
           .opt {
             display: none;
             position: absolute;
-            bottom: 6px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
             width: 100%;
             a {
               float: left;
