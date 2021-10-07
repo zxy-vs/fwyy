@@ -16,12 +16,16 @@
           <p class="t_a">
             歌手：
             <span v-for="(item, index) of ar" :key="index">
-              <router-link :to="'/artist?id='+item.id">{{ item.name }}</router-link>
-              <span v-if="!(index==ar.length-1)"> / </span>
+              <router-link :to="'/artist?id=' + item.id">{{
+                item.name
+              }}</router-link>
+              <span v-if="!(index == ar.length - 1)"> / </span>
             </span>
           </p>
           <p class="t_a">
-            所属专辑：<router-link :to="'/album?id='+al.id">{{ al.name }}</router-link>
+            所属专辑：<router-link :to="'/album?id=' + al.id">{{
+              al.name
+            }}</router-link>
           </p>
           <div class="t_btn">
             <global-com-btn :quan="quan" :info="info" @getids="getid" />
@@ -39,12 +43,11 @@ import { reactive, toRef, toRefs } from "@vue/reactivity";
 import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { watchEffect } from '@vue/runtime-core';
 export default {
   components: { GlobalComBtn },
   setup() {
-    const {
-      query: { id: id },
-    } = useRoute();
+    const Route = useRoute();
     const { state,commit, dispatch } = useStore();
     const getid = async () => {
       state.ids = id
@@ -84,7 +87,13 @@ export default {
         });
       },
     });
-    stateL.getquan(id);
+    watchEffect(()=>{
+      if(Route.path =='/song'){
+    stateL.getquan(Route.query.id);
+
+      }
+
+    })
     return {
       ...toRefs(stateL),
       getid,

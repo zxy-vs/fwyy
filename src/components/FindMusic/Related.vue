@@ -25,7 +25,12 @@
               <span>{{ birthday }}创建</span>
             </div>
             <div class="t_b">
-              <global-com-btn :quan="quan" :info="info" :subscribedCount="subscribedCount" @playing="Played" />
+              <global-com-btn
+                :quan="quan"
+                :info="info"
+                :subscribedCount="subscribedCount"
+                @playing="Played"
+              />
             </div>
             <div class="t_tag">
               <b>标签：</b>
@@ -57,47 +62,50 @@ import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import RelateList from "./Related/RelateList.vue";
 import { Time } from "../../untils/TimeTrans";
 import { useStore } from "vuex";
+import { watchEffect } from "@vue/runtime-core";
 export default {
   components: { GlobalComBtn, RelateList },
   setup() {
-    const { state,dispatch,commit } = useStore();
-    const {
-      query: { id: id },
-    } = useRoute();
+    const { state, dispatch, commit } = useStore();
+    const Route = useRoute();
     const stateL = reactive({
       quan: [],
-      info:[],
+      info: [],
       creator: [],
       birthday: "",
       data: [],
-      subscribedCount:0,
+      subscribedCount: 0,
       async getquan(id) {
         await axios.get("/api/playlist/detail?id=" + id).then((res) => {
-          console.log(res.playlist.tracks)
           this.quan = res.playlist;
           this.creator = res.playlist.creator;
           this.data = res.playlist.tracks;
           this.birthday = Time(this.creator.birthday);
-          this.subscribedCount = res.playlist.subscribedCount
+          this.subscribedCount = res.playlist.subscribedCount;
         });
       },
-      async Played(){
-        state.songList = stateL.quan.trackIds
-        state.songListIndex = 0
-        state.ids = state.songList[state.songListIndex].id
+      async Played() {
+        state.songList = stateL.quan.trackIds;
+        state.songListIndex = 0;
+        state.ids = state.songList[state.songListIndex].id;
         await dispatch("getAudios", state.songList[state.songListIndex].id);
-        await dispatch("getPlayText",state.songList[state.songListIndex].id)
-      commit('isSetPlay')
-      const ao = document.querySelector("audio");
-      if (ao.played) {
-        ao.load();
-        ao.play();
-      } else {
-        ao.play();
-      }
+        await dispatch("getPlayText", state.songList[state.songListIndex].id);
+        commit("isSetPlay");
+        const ao = document.querySelector("audio");
+        if (ao.played) {
+          ao.load();
+          ao.play();
+        } else {
+          ao.play();
+        }
       },
     });
-    stateL.getquan(id);
+    watchEffect(() => {
+      if(Route.path =='/playlist'){
+      stateL.getquan(Route.query.id);
+
+      }
+    });
     return {
       ...toRefs(stateL),
     };

@@ -48,7 +48,15 @@
           >创作者中心</a
         >
         <div class="c_nav_search">
-          <input type="text" class="search" placeholder="请输入" />
+          <input
+            type="text"
+            class="search"
+            v-model="Keys"
+            placeholder="音乐/视频/电台/用户"
+          /> 
+          <div class="c_show" v-show="Keys!=''">
+            <search :keys="Keys"/>
+          </div>
         </div>
       </section>
     </div>
@@ -56,11 +64,12 @@
 </template>
 <script>
 import Cookies from "js-cookie";
-import { reactive, ref, toRefs } from "vue";
+import { reactive, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import LoginTest from "./LoginTest.vue";
+import Search from './Search.vue';
 export default {
-  components: { LoginTest },
+  components: { LoginTest, Search },
   setup() {
     const { state } = useStore();
     const list = reactive([
@@ -81,11 +90,12 @@ export default {
     if (user) {
       userGet(user);
     }
+    const Keys = ref('')
     return {
       list,
       ...toRefs(state),
       userList,
-      user,
+      user,Keys
     };
   },
 };
@@ -204,7 +214,7 @@ export default {
         border-radius: 32px;
         position: relative;
         background: #fff url("../../assets/img/topbar.png") no-repeat;
-         background-position: 0 -99px;
+        background-position: 0 -99px;
         .search {
           color: #333;
           line-height: 16px;
@@ -216,6 +226,20 @@ export default {
           border: 0;
           height: 100%;
           padding: 0 4px 0 28px;
+        }
+        .c_show {
+          position: absolute;
+          top: 40px;
+          left: 0;
+          width: 240px;
+          z-index: 120;
+          left: 0;
+          box-sizing: border-box;
+          border: 1px solid #bebebe;
+          border-radius: 4px;
+          background: #fff;
+          box-shadow: 0 4px 7px #555;
+          text-shadow: 0 1px 0 rgb(255 255 255 / 90%);
         }
       }
       .c_nav_create {
