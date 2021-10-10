@@ -16,7 +16,7 @@
             item.name
           }}</router-link>
           <router-link
-            to=""
+           :to="'/artist?id=' + item.id"
             :class="['icon', index >= 10 ? 'icon1' : '']"
           ></router-link>
         </p>
@@ -26,12 +26,8 @@
 </template>
 
 <script>
-import { reactive } from "@vue/reactivity";
 export default {
-  props: ["GList"],
-  setup(props) {
-    console.log(props.GList);
-  },
+  props: ["GList"]
 };
 </script>
 

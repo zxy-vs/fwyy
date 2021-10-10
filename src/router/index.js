@@ -58,6 +58,9 @@ const routes = [{
   },{
     path: '/djradio',
     component: () => import('../components/FindMusic/djradio/Djradio.vue')
+  },{
+    path: '/video',
+    component: () => import('../components/FindMusic/Video.vue')
   }]
 }, {
   path: '/MyMusic',
@@ -75,6 +78,10 @@ const routes = [{
   path: '/search',
   name: 'Csearch',
   component: () => import('../views/Csearch.vue')
+}, {
+  path: '/home',
+  name: 'Home',
+  component: () => import('../views/Home.vue')
 }]
 
 const router = createRouter({

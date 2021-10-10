@@ -35,7 +35,7 @@
       <td width="200" style="width: 200px">
         <div class="name">
           <span> by </span>
-          <router-link to="" class="ar">{{
+          <router-link :to="'/home?id='+item.creator.userId" class="ar">{{
             item.creator.nickname
           }}</router-link>
         </div>

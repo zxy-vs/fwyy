@@ -334,7 +334,6 @@ export default {
         float: left;
         height: 39px;
         position: relative;
-        left: -1px;
         a {
           float: left;
           color: #333;

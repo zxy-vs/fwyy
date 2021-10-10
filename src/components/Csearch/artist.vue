@@ -11,7 +11,7 @@
             item.name
           }}</router-link>
           <router-link
-            to=""
+            :to="'/home?id='+item.accountId"
             :class="['icon', index >= 10 ? 'icon1' : '']"
           ></router-link>
         </p>

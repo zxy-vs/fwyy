@@ -5,15 +5,15 @@
         <img :src="`${item.coverUrl}?param=159y90`" alt="" />
         <p class="head"><span></span>{{ NumberW(item.playTime) }}</p>
         <p class="foot">{{ Times(item.durationms) }}</p>
-        <router-link to="" class="link"></router-link>
+        <router-link :to="'/video?id='+item.vid" class="link"></router-link>
       </div>
       <h4>
         <i v-if="item.type==0"></i>
-        <router-link to=""
+        <router-link :to="'/video?id='+item.vid"
           >{{item.title}}</router-link
         >
       </h4>
-      <h5>by <router-link to="" class="hui">{{item.creator[0].userName}}</router-link></h5>
+      <h5>by <router-link :to="'/home?id='+item.creator[0].userId" class="hui">{{item.creator[0].userName}}</router-link></h5>
     </li>
   </ul>
 </template>

@@ -5,8 +5,8 @@
         <h3>{{ GSList.name }}</h3>
         <img :src="`${GSList.picUrl}?param=640y300`" alt="" />
         <div class="img"></div>
-        <router-link to="#" class="l_cc"></router-link>
-        <router-link to="#" class="l_ss"></router-link>
+        <router-link v-if="GSList.accountId" :to="'/home?id='+GSList.accountId" class="l_cc"></router-link>
+        <a href="javascript:;" class="l_ss"></a>
       </div>
       <ul class="l_nav">
         <li v-for="(item, index) of name" :key="index">
@@ -57,6 +57,7 @@ export default {
       async getGSList(id) {
         await axios.get("/api/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
+          console.log(res.artist);
           this.RList = res.hotSongs;
         });
       },
