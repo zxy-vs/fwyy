@@ -71,6 +71,10 @@ const routes = [{
   path: '/Download',
   name: 'Download',
   component: () => import('../views/Download.vue')
+}, {
+  path: '/search',
+  name: 'Csearch',
+  component: () => import('../views/Csearch.vue')
 }]
 
 const router = createRouter({

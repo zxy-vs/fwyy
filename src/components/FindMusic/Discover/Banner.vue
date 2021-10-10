@@ -23,7 +23,10 @@
             <router-link v-if="item.encodeId.length == 10" :to="'/song?id='+item.targetId">
               <img :src="item.imageUrl" alt="" />
             </router-link>
-            <router-link v-if="item.encodeId.length == 9" :to="'/album?id='+item.targetId">
+            <router-link v-else-if="item.encodeId.length == 9" :to="'/album?id='+item.targetId">
+              <img :src="item.imageUrl" alt="" />
+            </router-link>
+            <router-link v-else to="">
               <img :src="item.imageUrl" alt="" />
             </router-link>
           </div>

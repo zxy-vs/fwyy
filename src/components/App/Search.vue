@@ -1,6 +1,6 @@
 <template>
   <p>
-    <router-link to="">搜“{{ keys }}” 相关用户</router-link> >
+    <router-link :to="`/search?type=1&key=${keys}`">搜“{{ keys }}” 相关用户</router-link> >
   </p>
   <template v-if="Lists">
     <div class="item" v-for="(item, index) of Lists.order" :key="index">
@@ -87,7 +87,6 @@ p {
     width: 62px;
     margin-right: -100px;
     padding: 10px 0 0 10px;
-    // border-right: 1px solid #e2e2e2;
     line-height: 17px;
     font-weight: normal;
     i {

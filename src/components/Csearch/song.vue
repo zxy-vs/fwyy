@@ -1,35 +1,17 @@
 <template>
-  <div class="R_tabel_header">
-    <h2>歌曲列表</h2>
-    <span>{{ quan.trackCount }}首歌</span>
-    <div class="header_r">
-      播放：<strong>{{ quan.playCount }}</strong
-      >次
-    </div>
-  </div>
-  <table class="R_list" v-if="data.length">
-    <tr>
-      <th width="74"></th>
-      <th width="235">歌曲标题</th>
-      <th width="111">时长</th>
-      <th width="90">歌手</th>
-      <th width="127">专辑</th>
-    </tr>
+  <table class="R_list" v-if="lists">
     <tr
-      v-for="(item, index) of data"
+      v-for="(item, index) of lists"
       :key="index"
-      :class="index % 2 == 0 ? '' : 'even'"
+      :class="index % 2 != 0 ? '' : 'even'"
     >
-      <td width="74" style="width: 74px">
-        <div class="hd">
-          <span class="num">{{ index + 1 }}</span>
-          <span
-            :class="['ply', item.id == state.ids ? 'ccolor' : '']"
-            @click="Played(index)"
-          ></span>
-        </div>
+      <td width="40" style="width: 40px">
+        <span
+          :class="['ply', item.id == state.ids ? 'ccolor' : '']"
+          @click="Played(index)"
+        ></span>
       </td>
-      <td width="235" style="width: 235px">
+      <td width="370" style="width: 370px">
         <div class="f_cb">
           <span class="txt">
             <router-link :to="'/song?id=' + item.id">{{
@@ -44,8 +26,7 @@
           </span>
         </div>
       </td>
-      <td width="111" style="width: 111px">
-        <span class="t">{{ Times(item.dt) }}</span>
+      <td width="96" style="width: 96px">
         <div class="opt">
           <a href="javascript:;" class="a"></a>
           <a href="javascript:;" class="s"></a>
@@ -53,7 +34,7 @@
           <a href="javascript:;" class="x"></a>
         </div>
       </td>
-      <td width="90" style="width: 90px">
+      <td width="130" style="width: 130px">
         <div class="name">
           <template v-for="(items, indexs) of item.ar" :key="indexs">
             <router-link :to="'/artist?id=' + items.id" class="ar">{{
@@ -63,25 +44,41 @@
           </template>
         </div>
       </td>
-      <td width="127" style="width: 127px">
+      <td width="156" style="width: 156px">
         <router-link :to="'/album?id=' + item.al.id" class="ar al">{{
           item.al.name
         }}</router-link>
       </td>
+      <td width="72" style="width: 72px">
+        <span class="t">{{ Times(item.dt) }}</span>
+      </td>
     </tr>
   </table>
 </template>
+
 <script>
+import { reactive, toRefs } from "@vue/reactivity";
 import { useStore } from "vuex";
-import { Times } from "../../../untils/TimeTran";
+import { watchEffect } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
+import { Times } from "../../untils/TimeTran";
 export default {
-  props: ["quan", "data"],
-  setup(props) {
-    console.log(props.data);
-    const { state, dispatch } = useStore();
+  setup() {
+    const { state,dispatch } = useStore();
+    const Route = useRoute();
+    const list = reactive({
+      lists: [],
+      async getnavList(key, type = 1) {
+        await axios
+          .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
+          .then((res) => {
+            this.lists = res.result.songs;
+          });
+      },
+    });
     const ao = document.querySelector("audio");
     const Played = async (index) => {
-      state.ids = props.data[index].id;
+      state.ids = list.lists[index].id;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);
@@ -98,87 +95,52 @@ export default {
         ao.play();
       }
     };
+    watchEffect(() => {
+      list.getnavList(Route.query.key, Route.query.type);
+    });
     return {
       state,
+      ...toRefs(list),
       Times,
       Played,
     };
   },
 };
 </script>
+
 <style lang="less" scoped>
-.R_tabel_header {
-  width: 100%;
-  height: 35px;
-  border-bottom: 2px solid #c20c0c;
-  h2 {
-    float: left;
-    font-size: 20px;
-    font-weight: normal;
-    margin: 0;
-  }
-  span {
-    float: left;
-    margin: 9px 0 0 20px;
-  }
-  .header_r {
-    float: right;
-    margin-top: 5px;
-    strong {
-      color: #c20c0c;
-    }
-  }
-}
 .R_list {
   width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
   border: 1px solid #d9d9d9;
-  border-top: 0;
   tr {
+    padding: 10px 10px 8px 18px;
+    border: 1px solid #fff;
     background-color: #f7f7f7;
-    th {
-      height: 36px;
-      padding: 8px 10px;
-      font-weight: normal;
-      background: url("../../../../public/static/table.png") no-repeat;
-      background-color: #f7f7f7;
-      background-position: 0 0;
-      background-repeat: repeat-x;
-      border: 1px solid #d9d9d9;
-    }
     td {
-      height: 30px;
-      padding: 6px 10px;
+      height: 43px;
       line-height: 18px;
       text-align: left;
+      padding: 10px 0 8px;
       position: relative;
-      .hd {
-        .ply {
-          float: right;
-          display: block;
-          width: 17px;
-          height: 17px;
-          cursor: pointer;
-          background: url("../../../../public/static/table.png") no-repeat;
-          background-position: 0 -103px;
-        }
-        .ply:hover {
-          background-position-y: -128px;
-        }
-        .num {
-          line-height: 18px;
-          text-align: left;
-          width: 25px;
-          margin-left: 5px;
-          color: #999;
-        }
-        .ccolor {
-          background-position: -20px -128px;
-        }
+      .ply {
+        float: left;
+        display: block;
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+        background: url("../../../public/static/table.png") no-repeat;
+        background-position: 0 -103px;
       }
+      .ply:hover {
+        background-position-y: -128px;
+      }
+
+      .ccolor {
+        background-position: -20px -128px;
+      }
+
       .f_cb {
-        width: 215px;
+        width: 370px;
         height: 18px;
         .txt {
           position: relative;
@@ -208,7 +170,7 @@ export default {
             width: 23px;
             height: 17px;
             margin: 1px 0 0 0;
-            background: url("../../../../public/static/table.png") no-repeat;
+            background: url("../../../public/static/table.png") no-repeat;
             background-position: 0 -151px;
           }
         }
@@ -216,7 +178,7 @@ export default {
       .opt {
         display: none;
         position: absolute;
-        bottom: 6px;
+        bottom: 12px;
         width: 100%;
         a {
           float: left;
@@ -224,12 +186,12 @@ export default {
           width: 18px;
           height: 16px;
           margin-right: 4px;
-          background: url("../../../../public/static/table.png") no-repeat;
+          background: url("../../../public/static/table.png") no-repeat;
         }
         .a {
           width: 13px;
           height: 13px;
-          background: url("../../../../public/static/icon.png") no-repeat;
+          background: url("../../../public/static/icon.png") no-repeat;
           background-position: 0 -700px;
         }
         .s {
@@ -283,24 +245,28 @@ export default {
         max-width: 107px;
       }
     }
-    td:hover {
-      .t {
-        display: none;
+    td:nth-of-type(1) {
+      padding-left: 18px;
+    }
+    td:nth-of-type(6) {
+      padding-right: 10px;
+    }
+  }
+  tr:hover {
+    background-color: #f3f3f3;
+    .opt {
+      display: block;
+      .a:hover {
+        background-position-x: -22px;
       }
-      .opt {
-        display: block;
-        .a:hover {
-          background-position-x: -22px;
-        }
-        .s:hover {
-          background-position-x: -20px;
-        }
-        .f:hover {
-          background-position-x: -20px;
-        }
-        .x:hover {
-          background-position-x: -104px;
-        }
+      .s:hover {
+        background-position-x: -20px;
+      }
+      .f:hover {
+        background-position-x: -20px;
+      }
+      .x:hover {
+        background-position-x: -104px;
       }
     }
   }

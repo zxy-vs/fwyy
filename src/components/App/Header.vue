@@ -47,15 +47,18 @@
           class="c_nav_create"
           >创作者中心</a
         >
-        <div class="c_nav_search">
+        <div class="c_nav_search" ref="searchs">
           <input
             type="text"
             class="search"
             v-model="Keys"
-            placeholder="音乐/视频/电台/用户"
-          /> 
-          <div class="c_show" v-show="Keys!=''">
-            <search :keys="Keys"/>
+            placeholder="音乐/视频/电台/用户" ref="clicks"
+          />
+          <div
+            :class="['c_show', isShow ? 'c_s_n' : '']"
+            v-show="Keys != ''"
+          >
+            <search :keys="Keys" />
           </div>
         </div>
       </section>
@@ -64,13 +67,15 @@
 </template>
 <script>
 import Cookies from "js-cookie";
-import { reactive, ref, toRefs, watch } from "vue";
+import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import LoginTest from "./LoginTest.vue";
-import Search from './Search.vue';
+import Search from "./Search.vue";
+import { useRouter } from 'vue-router';
 export default {
   components: { LoginTest, Search },
   setup() {
+    const Router = useRouter()
     const { state } = useStore();
     const list = reactive([
       { path: "/", text: "发现音乐" },
@@ -90,12 +95,34 @@ export default {
     if (user) {
       userGet(user);
     }
-    const Keys = ref('')
+    const Keys = ref("");
+    const searchs = ref(null);
+    const clicks = ref(null);
+    const isShow = ref(false);
+    onMounted(() => {
+      searchs.value.onmouseleave = function () {
+        document.documentElement.onclick = function () {
+          isShow.value = false;
+        };
+      };
+      searchs.value.onclick = function () {
+        isShow.value = true;
+        document.documentElement.onclick = null;
+      };
+      clicks.value.onkeydown =function(e){
+        if(e.keyCode == 13){
+            Router.push(`/search?type=1&key=${Keys.value}`)
+        }
+      }
+    });
     return {
       list,
       ...toRefs(state),
       userList,
-      user,Keys
+      user,
+      Keys,
+      searchs,
+      isShow,clicks
     };
   },
 };
@@ -228,6 +255,7 @@ export default {
           padding: 0 4px 0 28px;
         }
         .c_show {
+          display: none;
           position: absolute;
           top: 40px;
           left: 0;
@@ -241,7 +269,11 @@ export default {
           box-shadow: 0 4px 7px #555;
           text-shadow: 0 1px 0 rgb(255 255 255 / 90%);
         }
+        .c_s_n {
+          display: block;
+        }
       }
+
       .c_nav_create {
         text-decoration: none;
         float: right;

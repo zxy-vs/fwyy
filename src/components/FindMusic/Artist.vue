@@ -32,7 +32,6 @@
           </div>
         </template>
       </template>
-
       <ul class="BBX_ABC" v-if="Route.query.type != -1 && Route.query.type">
         <li v-for="(item, index) of ABC" :key="index">
           <router-link

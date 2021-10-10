@@ -1,14 +1,9 @@
 <template>
-  <ul class="BBX_show">
-    <template v-for="(item, index) of GList" :key="index">
-      <li
-        :class="[
-          index > 4 && index < 10 ? 'line' : '',
-          index >= 10 ? 'sml' : '',
-        ]"
-      >
-        <div class="BBX_img" v-if="index < 10">
-          <img v-lazy="`${item.picUrl}?param=130y130`" alt="" />
+    <ul class="BBX_show">
+    <template v-for="(item, index) of lists" :key="index">
+      <li>
+        <div class="BBX_img">
+          <img :src="`${item.picUrl}?param=130y130`" alt="" />
           <router-link :to="'/artist?id=' + item.id"></router-link>
         </div>
         <p>
@@ -24,16 +19,33 @@
     </template>
   </ul>
 </template>
-
 <script>
-import { reactive } from "@vue/reactivity";
+import { reactive, toRefs } from "@vue/reactivity";
+import { watchEffect } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
 export default {
-  props: ["GList"],
-  setup(props) {
-    console.log(props.GList);
+  setup() {
+    const Route = useRoute();
+    const list = reactive({
+      lists: [],
+      async getnavList(key, type = 1) {
+        await axios
+          .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
+          .then((res) => {
+            this.lists = res.result.artists;
+          });
+      },
+    });
+    watchEffect(() => {
+      list.getnavList(Route.query.key,Route.query.type);
+    });
+    return {
+      ...toRefs(list),
+    };
   },
 };
 </script>
+
 
 <style lang="less" scoped>
 .BBX_show {
@@ -61,7 +73,7 @@ export default {
         left: 0;
         width: 100%;
         height: 100%;
-        background: url("../../../../public/static/coverall.png") no-repeat;
+        background: url("../../../public/static/coverall.png") no-repeat;
         background-position: 0 -680px;
       }
     }
@@ -86,7 +98,7 @@ export default {
         display: block;
         width: 17px;
         height: 18px;
-        background: url("../../../../public/static/icon.png") no-repeat;
+        background: url("../../../public/static/icon.png") no-repeat;
         background-position: 0 -740px;
       }
       .icon1 {
@@ -94,17 +106,6 @@ export default {
         margin: 4px 0 0 2px;
       }
     }
-  }
-  .line {
-    margin-bottom: 12px;
-    border-bottom: 1px dotted #999;
-  }
-  .sml {
-    height: 30px;
-    width: 130px;
-    padding-left: 17px;
-    padding-bottom: 0;
-    line-height: 23px;
   }
 }
 </style>

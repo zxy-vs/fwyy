@@ -124,7 +124,7 @@
                   >{{ item.program.name }}</router-link
                 >
                 <router-link
-                  :to="'/program?id=' + item.program.radio.id"
+                  :to="'/djradio?id=' + item.program.radio.id"
                   class="hui"
                   :title="item.program.dj.brand"
                   >{{ item.program.dj.brand }}</router-link
