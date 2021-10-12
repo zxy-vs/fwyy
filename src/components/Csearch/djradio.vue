@@ -11,10 +11,22 @@
         }}</router-link>
       </h3>
       <p>
-        by <router-link :to="'/home?id='+item.dj.userId">{{ item.dj.nickname }}</router-link> &nbsp;<sup
+        by
+        <router-link :to="'/home?id=' + item.dj.userId">{{
+          item.dj.nickname
+        }}</router-link>
+        &nbsp;<sup
           v-if="item.dj.authStatus"
+          :class="item.dj.userType == 1 ? 'v' : ''"
+        ></sup>
+        <sup
+          v-if="item.dj.authStatus == 0 && item.dj.userType != 0"
+          class="star"
         ></sup
-        ><i  v-if="item.dj.gender" :class="item.dj.gender == 2 ? 'woman' : ''"></i>
+        ><i
+          v-if="item.dj.gender"
+          :class="item.dj.gender == 2 ? 'woman' : ''"
+        ></i>
       </p>
     </li>
   </ul>
@@ -33,6 +45,7 @@ export default {
         await axios
           .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
           .then((res) => {
+            console.log(res.result.djRadios);
             this.lists = res.result.djRadios;
           });
       },
@@ -107,6 +120,14 @@ ul {
         margin-top: 7px;
         background: url("../../../public/static/icon2.png") no-repeat;
         background-position: -110px -190px;
+      }
+      .v {
+        background: url("../../../public/static/icon.png") no-repeat;
+        background-position: 0 1px;
+      }
+      .star {
+        background: url("../../../public/static/icon.png") no-repeat;
+        background-position: -65px -840px;
       }
       i {
         display: inline-block;

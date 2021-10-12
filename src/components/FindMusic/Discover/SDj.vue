@@ -1,5 +1,5 @@
 <template>
-  <div class="SDj">
+  <div class="SDj" v-if="false">
     <global-com-smallheader-1 :header1="header1" />
     <div class="SDj_f">
       <ul>

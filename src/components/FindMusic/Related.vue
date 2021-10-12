@@ -15,10 +15,10 @@
               </div>
             </div>
             <div class="t_u">
-              <router-link to="#" class="u_img">
+              <router-link :to="'/home?id=' + creator.userId" class="u_img">
                 <img :src="`${creator.avatarUrl}?param=40y40`" alt="" />
               </router-link>
-              <router-link to="#" class="g_title">{{
+              <router-link :to="'/home?id=' + creator.userId" class="g_title">{{
                 creator.nickname
               }}</router-link>
               <img class="v_logo" src="../../assets/img/vlogo.png" alt="" />
@@ -101,9 +101,8 @@ export default {
       },
     });
     watchEffect(() => {
-      if(Route.path =='/playlist'){
-      stateL.getquan(Route.query.id);
-
+      if (Route.path == "/playlist") {
+        stateL.getquan(Route.query.id);
       }
     });
     return {
@@ -206,6 +205,7 @@ div {
             .v_logo {
               width: 13px;
               height: 13px;
+              margin-left: 2px;
               vertical-align: text-top;
             }
             span {

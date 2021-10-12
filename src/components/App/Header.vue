@@ -47,17 +47,15 @@
           class="c_nav_create"
           >创作者中心</a
         >
-        <div class="c_nav_search" ref="searchs">
+        <div class="c_nav_search">
           <input
             type="text"
             class="search"
             v-model="Keys"
-            placeholder="音乐/视频/电台/用户" ref="clicks"
+            placeholder="音乐/视频/电台/用户"
+            ref="clicks"
           />
-          <div
-            :class="['c_show', isShow ? 'c_s_n' : '']"
-            v-show="Keys != ''"
-          >
+          <div :class="['c_show', isShow ? 'c_s_n' : '']" v-show="Keys != ''">
             <search :keys="Keys" />
           </div>
         </div>
@@ -71,11 +69,11 @@ import { onMounted, reactive, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import LoginTest from "./LoginTest.vue";
 import Search from "./Search.vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 export default {
   components: { LoginTest, Search },
   setup() {
-    const Router = useRouter()
+    const Router = useRouter();
     const { state } = useStore();
     const list = reactive([
       { path: "/", text: "发现音乐" },
@@ -96,24 +94,20 @@ export default {
       userGet(user);
     }
     const Keys = ref("");
-    const searchs = ref(null);
     const clicks = ref(null);
     const isShow = ref(false);
     onMounted(() => {
-      searchs.value.onmouseleave = function () {
-        document.documentElement.onclick = function () {
-          isShow.value = false;
-        };
+      clicks.value.onblur = function () {
+        isShow.value = false;
       };
-      searchs.value.onclick = function () {
+      clicks.value.onfocus = function () {
         isShow.value = true;
-        document.documentElement.onclick = null;
       };
-      clicks.value.onkeydown =function(e){
-        if(e.keyCode == 13){
-            Router.push(`/search?type=1&key=${Keys.value}`)
+      clicks.value.onkeydown = function (e) {
+        if (e.keyCode == 13) {
+          Router.push(`/search?type=1&key=${Keys.value}`);
         }
-      }
+      };
     });
     return {
       list,
@@ -121,8 +115,8 @@ export default {
       userList,
       user,
       Keys,
-      searchs,
-      isShow,clicks
+      isShow,
+      clicks,
     };
   },
 };

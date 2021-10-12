@@ -57,7 +57,6 @@ export default {
       async getGSList(id) {
         await axios.get("/api/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
-          console.log(res.artist);
           this.RList = res.hotSongs;
         });
       },

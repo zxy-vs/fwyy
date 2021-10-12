@@ -12,10 +12,12 @@
       </td>
       <td width="480" style="width: 480px">
         <div class="ttc">
-          <!-- :class="item.followed.length? 'v' : ''" -->
           <router-link :to="'/home?id=' + item.userId">
             <span>{{ item.nickname }}</span
-            >&nbsp;<sup v-if="item.authStatus"></sup
+            >&nbsp;<sup
+              v-if="item.authStatus"
+              :class="item.avatarDetail.userType == 10 ? 'v' : ''"
+            ></sup
             ><i v-if="item.gender" :class="item.gender == 2 ? 'woman' : ''"></i>
           </router-link>
         </div>
@@ -117,6 +119,10 @@ export default {
             background: url("../../../public/static/icon.png") no-repeat;
             background-position: 0 1px;
           }
+          .star {
+            background: url("../../../public/static/icon.png") no-repeat;
+            background-position: -65px -840px;
+          }
           i {
             display: inline-block;
             overflow: hidden;
@@ -152,8 +158,8 @@ export default {
           cursor: pointer;
         }
       }
-      .btn:hover{
-          background-position-y: -1020px;
+      .btn:hover {
+        background-position-y: -1020px;
       }
     }
     td:nth-of-type(1) {

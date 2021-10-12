@@ -2,7 +2,7 @@
   <div class="csearch">
     <div class="c_top"></div>
     <div class="c_c">
-      <div class="c_search" ref="searchs">
+      <div class="c_search">
         <input type="text" v-model="keyss" ref="clicks" />
         <router-link
           :to="`/search?type=${Route.query.type}&key=${keyss}`"
@@ -117,7 +117,6 @@ export default {
         await axios
           .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
           .then((res) => {
-            console.log(res.result);
             if (res.result.songs) {
               this.ttype = res.result.songs;
             } else if (res.result.artists) {
@@ -137,19 +136,15 @@ export default {
       },
     });
     const clicks = ref(null);
-    const searchs = ref(null);
     const transs = (key) => {
       keyss.value = key;
     };
     onMounted(() => {
-      searchs.value.onmouseleave = function () {
-        document.documentElement.onclick = function () {
+      clicks.value.onblur = function () {
           isShow.value = false;
-        };
       };
-      searchs.value.onclick = function () {
+      clicks.value.onfocus = function () {
         isShow.value = true;
-        document.documentElement.onclick = null;
       };
       clicks.value.onkeydown = function (e) {
         if (e.keyCode == 13) {
@@ -170,7 +165,6 @@ export default {
       ...toRefs(search),
       listUrl,
       keyss,
-      searchs,
       isShow,
       Route,
       clicks,
