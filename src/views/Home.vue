@@ -73,6 +73,20 @@
         <h3>{{ profile.nickname }}创建的电台</h3>
       </div>
     </audios>
+    <div>
+      <div class="f_tit">
+        <h3>听歌排行</h3>
+        <h4>累积听歌{{ list.listenSongs }}首</h4>
+        <div class="navv">
+          <span :class="Is == 1 ? 'weight' : ''" @click="Is = 1">所有时间</span>
+          <i></i>
+          <span :class="Is == 0 ? 'weight' : ''" @click="Is = 0">最近一周</span>
+        </div>
+      </div>
+      <keep-alive>
+        <component :is="IsShow[Is]"></component>
+      </keep-alive>
+    </div>
     <playlist>
       <template #="{ data }"
         ><div class="f_tit">
@@ -99,16 +113,20 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "@vue/reactivity";
+import { reactive, ref, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
 import playlist from "../components/Home/playlist.vue";
 import ShouPlaylist from "../components/Home/shouPlaylist .vue";
 import Audios from "../components/Home/audios.vue";
+import rankWeek from "../components/Home/rankWeek.vue";
+import RankAll from "../components/Home/rankAll.vue";
 export default {
-  components: { playlist, ShouPlaylist, Audios },
+  components: { playlist, ShouPlaylist, Audios, rankWeek, RankAll },
   setup() {
     const Route = useRoute();
+    const Is = ref(0);
+    const IsShow = ref(["rankWeek", "rankAll"]);
     const home = reactive({
       list: [],
       allAuthTypes: [],
@@ -129,6 +147,8 @@ export default {
     });
     return {
       ...toRefs(home),
+      Is,
+      IsShow,
     };
   },
 };
@@ -396,7 +416,9 @@ export default {
     height: 35px;
     padding-bottom: 2px;
     border-bottom: 2px solid #c20c0c;
+    position: relative;
     h3 {
+      float: left;
       position: relative;
       margin: 0;
       font-size: 20px;
@@ -409,6 +431,41 @@ export default {
         top: 1px;
         background: url("../assets/img/black-r-icon@3x.png") no-repeat;
         background-size: cover;
+      }
+    }
+    h4 {
+      margin: 0;
+      float: left;
+      display: inline;
+      margin-top: 5px;
+      margin-left: 10px;
+      line-height: 26px;
+      font-weight: 400;
+      color: #666;
+    }
+    .navv {
+      position: absolute;
+      z-index: 1;
+      right: 0;
+      bottom: 5px;
+      span {
+        float: right;
+        margin-left: 8px;
+        line-height: 26px;
+        color: #666;
+        cursor: pointer;
+      }
+      i {
+        width: 1px;
+        height: 12px;
+        margin-top: 7px;
+        background-color: #999;
+        float: right;
+        margin-left: 8px;
+      }
+      .weight {
+        color: #333;
+        font-weight: 700;
       }
     }
   }
