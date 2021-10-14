@@ -132,6 +132,7 @@ import { useRoute } from "vue-router";
 import { Time } from "../../../untils/TimeTrans";
 import { Times } from "../../../untils/TimeTran";
 import { useStore } from "vuex";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const { state, commit, dispatch } = useStore();
@@ -145,7 +146,7 @@ export default {
       dj: [],
       SongList: [],
       async getList(id) {
-        await axios.get("/api/dj/program/detail?id=" + id).then((res) => {
+        await axios.get(api+"/dj/program/detail?id=" + id).then((res) => {
           this.List = res.program;
           this.Radio = res.program.radio;
           this.mainSong = res.program.mainSong;

@@ -150,6 +150,7 @@ import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { Time } from "../../untils/TimeTrans";
 import { Times } from "../../untils/TimeTran";
 import { useStore } from "vuex";
+import { api } from '../../untils/baseProxy';
 export default {
   components: { GlobalComBtn },
   setup() {
@@ -166,7 +167,7 @@ export default {
         this.indexs = id;
       },
       async getlList() {
-        await axios.get("/api/toplist").then((res) => {
+        await axios.get(api+"/toplist").then((res) => {
           this.lList = res.list;
         });
       },
@@ -178,7 +179,7 @@ export default {
       subscribedCount: [],
       info: [],
       async getctt(id = "19723756") {
-        await axios.get("/api/playlist/detail?id=" + id).then((res) => {
+        await axios.get(api+"/playlist/detail?id=" + id).then((res) => {
           this.quan = res.playlist;
           this.subscribedCount = res.playlist.subscribedCount;
           this.TpList = res.playlist.tracks;

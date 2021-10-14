@@ -6,6 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 import {
   Times
 } from '../untils/TimeTran';
+import {api} from '../untils/baseProxy'
 export default createStore({
   state: {
     isKeys: true,//下播放框锁定
@@ -61,12 +62,12 @@ export default createStore({
     async getAudios({
       commit
     }, id) {
-      await axios.get('/api/song/url?id=' + id).then(res => {
+      await axios.get(api+'/song/url?id=' + id).then(res => {
         commit('setAudios', res.data.data[0].url)
       })
     },
     async getPlayText({commit},id){
-      await axios.get("/api/song/detail?ids=" + id).then((res) => {
+      await axios.get(api+"/song/detail?ids=" + id).then((res) => {
         commit('setPlayText',res.data.songs[0])
         commit('setPicUrl',res.data.songs[0].al.picUrl)
         commit('setTime',res.data.songs[0].dt)

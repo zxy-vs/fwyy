@@ -70,6 +70,7 @@ import { useStore } from "vuex";
 import LoginTest from "./LoginTest.vue";
 import Search from "./Search.vue";
 import { useRouter } from "vue-router";
+import { api } from '../../untils/baseProxy';
 export default {
   components: { LoginTest, Search },
   setup() {
@@ -86,7 +87,7 @@ export default {
     const user = Cookies.get("userId");
     const userList = ref([]);
     const userGet = async (user) => {
-      await axios.get("/api/user/detail?uid=" + user).then((res) => {
+      await axios.get(api+"/user/detail?uid=" + user).then((res) => {
         userList.value = res.profile;
       });
     };

@@ -39,6 +39,7 @@ import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router';
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const move = ref(null);
@@ -57,7 +58,7 @@ export default {
     const submit = ref(null);
     const request = async (text) => {
       await axios.get(
-        "/api/login/cellphone?phone=" + ip.value + "&password=" + pas.value
+        api+"/login/cellphone?phone=" + ip.value + "&password=" + pas.value
       ).then(res=>{
         if(res.code!==200){
           err.value.style.display = "block";

@@ -32,6 +32,7 @@
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const headList = ref({
@@ -42,7 +43,7 @@ export default {
     const lbt = reactive({
       lbtList: [],
       async getlbt() {
-        await axios.get("/api/album/newest").then((res) => {
+        await axios.get(api+"/album/newest").then((res) => {
           this.lbtList = res.albums;
           this.lbtList.length = 10;
         });

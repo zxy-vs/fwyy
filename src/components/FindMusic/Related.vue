@@ -63,6 +63,7 @@ import RelateList from "./Related/RelateList.vue";
 import { Time } from "../../untils/TimeTrans";
 import { useStore } from "vuex";
 import { watchEffect } from "@vue/runtime-core";
+import { api } from '../../untils/baseProxy';
 export default {
   components: { GlobalComBtn, RelateList },
   setup() {
@@ -76,7 +77,7 @@ export default {
       data: [],
       subscribedCount: 0,
       async getquan(id) {
-        await axios.get("/api/playlist/detail?id=" + id).then((res) => {
+        await axios.get(api+"/playlist/detail?id=" + id).then((res) => {
           this.quan = res.playlist;
           this.creator = res.playlist.creator;
           this.data = res.playlist.tracks;

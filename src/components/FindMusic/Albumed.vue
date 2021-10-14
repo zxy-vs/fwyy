@@ -62,6 +62,7 @@ import { Time } from "../../untils/TimeTrans";
 // import { nHbr } from "../../untils/nHbr";
 import { useStore } from "vuex";
 import AlbList from './Albumed/AlbList.vue';
+import { api } from '../../untils/baseProxy';
 export default {
   components: { GlobalComBtn, AlbList },
   setup() {
@@ -76,7 +77,7 @@ export default {
       data: [],
       subscribedCount: 0,
       async getquan(id) {
-        await axios.get("/api/album?id=" + id).then((res) => {
+        await axios.get(api+"/album?id=" + id).then((res) => {
           this.quan = res.album;
           this.album = res.album
           this.info = res.album.info

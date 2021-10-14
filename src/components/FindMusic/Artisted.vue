@@ -39,6 +39,7 @@ import X from "./Artisted/X.vue";
 import Y from "./Artisted/Y.vue";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
+import { api } from '../../untils/baseProxy';
 export default {
   components: { R, S, X, Y },
   setup() {
@@ -55,23 +56,23 @@ export default {
       Album: [],
       Mv:[],
       async getGSList(id) {
-        await axios.get("/api/artists?id=" + id).then((res) => {
+        await axios.get(api+"/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
           this.RList = res.hotSongs;
         });
       },
       async getDesc(id) {
-        await axios.get("/api/artist/desc?id=" + id).then((res) => {
+        await axios.get(api+"/artist/desc?id=" + id).then((res) => {
           this.Desc = res;
         });
       },
       async getAlbum(id) {
-        await axios.get("/api/artist/album?limit=999&id=" + id).then((res) => {
+        await axios.get(api+"/artist/album?limit=999&id=" + id).then((res) => {
           this.Album = res.hotAlbums;
         });
       },
       async getMv(id) {
-        await axios.get("/api/artist/mv?id=" + id).then((res) => {
+        await axios.get(api+"/artist/mv?id=" + id).then((res) => {
           this.Mv = res.mvs;
         });
       },

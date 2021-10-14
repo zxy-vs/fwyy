@@ -44,6 +44,7 @@ import { useStore } from "vuex";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { NumberW } from "../../untils/NumberW";
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const { state, dispatch } = useStore();
@@ -52,7 +53,7 @@ export default {
       lists: [],
       async getnavList(key, type = 1) {
         await axios
-          .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
+          .get(`${api}/cloudsearch?keywords=${key}&type=${type}&limit=20`)
           .then((res) => {
             this.lists = res.result.userprofiles;
           });

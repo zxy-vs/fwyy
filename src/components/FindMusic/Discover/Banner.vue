@@ -43,13 +43,14 @@
 
 <script>
 import { reactive, toRefs } from "vue";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const banner = reactive({
       bannerList: [],
       bgUrl: {},
       async getList() {
-        await axios.get("/api/banner?type=0").then((res) => {
+        await axios.get(api+"/banner?type=0").then((res) => {
           banner.bannerList = res.banners;
           this.getbg(0);
         });

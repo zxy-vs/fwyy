@@ -52,6 +52,7 @@
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { onMounted, watchEffect } from "@vue/runtime-core";
 import { useRoute} from 'vue-router';
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute()
@@ -64,7 +65,7 @@ export default {
       async getList(order='hot', cat='全部', offset=0) {
         await axios
           .get(
-            `/api/top/playlist?order=${order}&cat=${cat}&limit=35&offset=${
+            `${api}/top/playlist?order=${order}&cat=${cat}&limit=35&offset=${
               offset * 35
             }`
           )
@@ -75,7 +76,7 @@ export default {
           });
       },
       async getHead() {
-        await axios.get("/api/playlist/catlist").then((res) => {
+        await axios.get(api+"/playlist/catlist").then((res) => {
           this.Hlist = res.categories;
           let o = [];
           let I = [];

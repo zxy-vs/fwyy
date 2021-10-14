@@ -94,6 +94,7 @@ import { Time } from "../../../untils/TimeTrans";
 import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const {
@@ -106,13 +107,13 @@ export default {
       songList: [],
       count: 0,
       async getList(id) {
-        await axios.get("/api/dj/detail?rid=" + id).then((res) => {
+        await axios.get(api+"/dj/detail?rid=" + id).then((res) => {
           this.List = res.data;
           this.dj = res.data.dj;
         });
       },
       async getSongList(id) {
-        await axios.get("/api/dj/program?limit=999&rid=" + id).then((res) => {
+        await axios.get(api+"/dj/program?limit=999&rid=" + id).then((res) => {
           this.songList = res.programs;
           this.count = res.count;
         });

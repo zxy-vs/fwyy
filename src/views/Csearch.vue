@@ -75,6 +75,7 @@ import djradio from "../components/Csearch/djradio.vue";
 import user from "../components/Csearch/user.vue";
 import { onMounted, watchEffect } from "@vue/runtime-core";
 import { useRoute, useRouter } from "vue-router";
+import {api} from '../untils/baseProxy'
 export default {
   components: { songs, song, artist, album, mv, djradio, user },
   setup() {
@@ -109,13 +110,13 @@ export default {
       Lists: [],
       ttype: [],
       async getList(key) {
-        await axios.get("/api/search/suggest?keywords=" + key).then((res) => {
+        await axios.get(api+"/search/suggest?keywords=" + key).then((res) => {
           this.Lists = res.result;
         });
       },
       async getnavList(key, type = 1) {
         await axios
-          .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
+          .get(`${api}/cloudsearch?keywords=${key}&type=${type}&limit=20`)
           .then((res) => {
             if (res.result.songs) {
               this.ttype = res.result.songs;

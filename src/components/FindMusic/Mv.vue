@@ -47,6 +47,7 @@
 import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import {NumberW} from '../../untils/NumberW'
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute();
@@ -54,12 +55,12 @@ export default {
       stateList: [],
       video: "",
       async getStateList(id) {
-        await axios.get("/api/mv/detail?mvid=" + id).then((res) => {
+        await axios.get(api+"/mv/detail?mvid=" + id).then((res) => {
           this.stateList = res.data;
         });
       },
       async getVideo(id) {
-        await axios.get("/api/mv/url?id=" + id).then((res) => {
+        await axios.get(api+"/mv/url?id=" + id).then((res) => {
           this.video = res.data.url;
         });
       },

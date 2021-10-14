@@ -66,6 +66,7 @@ import { reactive, ref, toRefs } from "@vue/reactivity";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute, useRouter } from "vue-router";
 import BBX from "./Artist/BBX.vue";
+import { api } from '../../untils/baseProxy';
 export default {
   components: { BBX },
   setup() {
@@ -109,7 +110,7 @@ export default {
       async getGList(type = -1, area = -1, initial = -1) {
         await axios
           .get(
-            `/api/artist/list?type=${type}&area=${area}&initial=${initial}&limit=100`
+            `${api}/artist/list?type=${type}&area=${area}&initial=${initial}&limit=100`
           )
           .then((res) => {
             this.GList = res.artists;

@@ -33,6 +33,7 @@ import { reactive, ref, toRefs } from "@vue/reactivity";
 import AlbumCom from "./Album/AlbumCom.vue";
 import { watchEffect } from '@vue/runtime-core';
 import { useRoute } from 'vue-router';
+import { api } from '../../untils/baseProxy';
 export default {
   components: { AlbumCom },
   setup() {
@@ -43,13 +44,13 @@ export default {
       offset:1,
       total:0,
       async getlbt() {
-        await axios.get("/api/album/newest").then((res) => {
+        await axios.get(api+"/album/newest").then((res) => {
           this.lbtList = res.albums;
           this.lbtList.length = 10;
         });
       },
       async getquanList(offset,area='ALL') {
-        await axios.get(`/api/album/new?offset=${(offset-1)*35}&limit=35&area=${area}`).then(res=>{
+        await axios.get(`${api}/album/new?offset=${(offset-1)*35}&limit=35&area=${area}`).then(res=>{
             this.quanList = res.albums
             this.total = Math.ceil(res.total/35)*10
         })

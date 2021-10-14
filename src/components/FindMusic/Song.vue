@@ -44,6 +44,7 @@ import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { watchEffect } from '@vue/runtime-core';
+import { api } from '../../untils/baseProxy';
 export default {
   components: { GlobalComBtn },
   setup() {
@@ -72,12 +73,12 @@ export default {
       info:[],
       subscribedCount: 0,
       async getquan(id) {
-        await axios.get("/api/song/detail?ids=" + id).then((res) => {
+        await axios.get(api+"/song/detail?ids=" + id).then((res) => {
           this.quan = res.songs[0];
           this.al = res.songs[0].al;
           this.ar = res.songs[0].ar;
         });
-        await axios.get("/api/lyric?id=" + id).then((res) => {
+        await axios.get(api+"/lyric?id=" + id).then((res) => {
           if (res.lrc) {
             this.lyric = res.lrc.lyric;
             this.lyric = this.lyric.replace(/\n/g, "<br>");

@@ -21,6 +21,7 @@
 <script>
 import { reactive } from "@vue/reactivity";
 import GlobalComSmallheader1 from "../../../GlobalCom/GlobalComSmallheader1.vue";
+import { api } from '../../../untils/baseProxy';
 export default {
   components: { GlobalComSmallheader1 },
   setup() {
@@ -31,7 +32,7 @@ export default {
    const SDj_j = reactive({
        j_list:[],
        async getList(){
-           await axios.get('/api/artist/list?type=-1&area=-1&initial=0').then(res=>{
+           await axios.get(api+'/artist/list?type=-1&area=-1&initial=0').then(res=>{
                console.log(res);
            })
        }

@@ -43,6 +43,7 @@ import { useRoute } from "vue-router";
 import { NumberW } from "../../untils/NumberW";
 import { watchEffect } from "@vue/runtime-core";
 import { Time } from "../../untils/TimeTrans";
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute();
@@ -51,13 +52,13 @@ export default {
       video: "",
       creator: [],
       async getStateList(id) {
-        await axios.get("/api/video/detail?id=" + id).then((res) => {
+        await axios.get(api+"/video/detail?id=" + id).then((res) => {
           this.stateList = res.data;
           this.creator = res.data.creator;
         });
       },
       async getVideo(id) {
-        await axios.get("/api/video/url?id=" + id).then((res) => {
+        await axios.get(api+"/video/url?id=" + id).then((res) => {
           this.video = res.urls[0].url;
         });
       },

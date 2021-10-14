@@ -36,6 +36,7 @@
 import { reactive, toRefs } from "@vue/reactivity";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute();
@@ -43,7 +44,7 @@ export default {
       lists: [],
       async getnavList(key, type = 1) {
         await axios
-          .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
+          .get(`${api}/cloudsearch?keywords=${key}&type=${type}&limit=20`)
           .then((res) => {
             console.log(res.result.djRadios);
             this.lists = res.result.djRadios;

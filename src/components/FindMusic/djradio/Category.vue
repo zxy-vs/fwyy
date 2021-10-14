@@ -56,6 +56,7 @@
 import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute();
@@ -65,14 +66,14 @@ export default {
       current: 1,
       total: 0,
       async getTList(id) {
-        await axios.get("/api/dj/recommend/type?type=" + id).then((res) => {
+        await axios.get(api+"/dj/recommend/type?type=" + id).then((res) => {
           this.TList = res.djRadios;
           this.TList.length = 5;
         });
       },
       async getRList(id, offset = 0) {
         await axios
-          .get(`/api/dj/radio/hot?cateId=${id}&limit=30&offset=${offset * 30}`)
+          .get(`${api}/dj/radio/hot?cateId=${id}&limit=30&offset=${offset * 30}`)
           .then((res) => {
             this.RList = res.djRadios;
             this.total = Math.ceil((res.count / 30) * 10);

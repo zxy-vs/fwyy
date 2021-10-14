@@ -28,6 +28,7 @@
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
+import { api } from '../../untils/baseProxy';
 export default {
   props: ["keys"],
   setup(props) {
@@ -46,7 +47,7 @@ export default {
     const search = reactive({
       Lists: [],
       async getList(key) {
-        await axios.get("/api/search/suggest?keywords=" + key).then((res) => {
+        await axios.get(api+"/search/suggest?keywords=" + key).then((res) => {
           this.Lists = res.result;
         });
       },

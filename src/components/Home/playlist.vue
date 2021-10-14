@@ -15,6 +15,7 @@
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute();
@@ -24,7 +25,7 @@ export default {
       data: [],
       async getList(id) {
         await axios
-          .get("/api/user/playlist?limit=999&uid=" + id)
+          .get(api+"/user/playlist?limit=999&uid=" + id)
           .then((res) => {
             this.list = res.playlist;
           });

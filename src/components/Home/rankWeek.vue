@@ -47,6 +47,7 @@ import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
 import { useStore } from 'vuex';
+import {api} from '../../untils/baseProxy'
 export default {
   setup() {
     const Route = useRoute();
@@ -54,7 +55,7 @@ export default {
     const Week = reactive({
       list: [],
       async getList(id) {
-          await axios.get(`/api/user/record?uid=${id}&type=1`).then((res) => {
+          await axios.get(`${api}/user/record?uid=${id}&type=1`).then((res) => {
             this.list = res.weekData;
             if (this.list.length >= 10) {
               this.list.length = 10;

@@ -9,6 +9,8 @@
         <span
           :class="['ply', item.id == state.ids ? 'ccolor' : '']"
         ></span>
+          <!-- @click="Played(index)" -->
+
       </td>
       <td width="70" style="width: 70px">
         <router-link :to="'/playlist?id=' + item.id"
@@ -35,7 +37,7 @@
       <td width="200" style="width: 200px">
         <div class="name">
           <span> by </span>
-          <router-link :to="'/home?id='+item.creator.userId" class="ar">{{
+          <router-link :to="'/home?id=' + item.creator.userId" class="ar">{{
             item.creator.nickname
           }}</router-link>
         </div>
@@ -56,6 +58,7 @@ import { useStore } from "vuex";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { NumberW } from "../../untils/NumberW";
+import { api } from "../../untils/baseProxy";
 export default {
   setup() {
     const { state, dispatch } = useStore();
@@ -64,12 +67,31 @@ export default {
       lists: [],
       async getnavList(key, type = 1) {
         await axios
-          .get(`/api/cloudsearch?keywords=${key}&type=${type}&limit=20`)
+          .get(`${api}/cloudsearch?keywords=${key}&type=${type}&limit=20`)
           .then((res) => {
             this.lists = res.result.playlists;
           });
       },
     });
+    const ao = document.querySelector("audio");
+    const Played = async (index) => {
+      state.ids = list.lists[index].id;
+      await dispatch("getAudios", state.ids);
+      await dispatch("getPlayText", state.ids);
+      clearInterval(state.tst);
+      const pg = document.querySelector(".c_cur");
+      state.tst = setInterval(() => {
+        pg.style.width =
+          (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+      }, 1000 / 60);
+      state.isPlay = true;
+      if (ao.played) {
+        ao.load();
+        ao.play();
+      } else {
+        ao.play();
+      }
+    };
     watchEffect(() => {
       list.getnavList(Route.query.key, Route.query.type);
     });
@@ -77,6 +99,7 @@ export default {
       state,
       ...toRefs(list),
       NumberW,
+      Played,
     };
   },
 };
@@ -216,9 +239,9 @@ export default {
       .al {
         max-width: 107px;
       }
-      img{
-          width: 50px;
-          height: 50px;
+      img {
+        width: 50px;
+        height: 50px;
       }
     }
   }

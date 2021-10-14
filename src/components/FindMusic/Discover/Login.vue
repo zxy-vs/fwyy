@@ -55,6 +55,7 @@ import Cookies from "js-cookie";
 import { ref, toRefs } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router';
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const Router = useRouter()
@@ -63,7 +64,7 @@ export default {
     const userList = ref([]);
     const lv = ref(0)
     const userGet = async (user) => {
-      await axios.get("/api/user/detail?uid=" + user).then((res) => {
+      await axios.get(api+"/user/detail?uid=" + user).then((res) => {
         userList.value = res.profile;
         lv.value = res.level
       });

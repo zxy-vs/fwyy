@@ -11,6 +11,7 @@
 
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const headList = ref({
@@ -29,7 +30,7 @@ export default {
     const contentList = reactive({
       list: [],
       async getlist() {
-        await axios.get("/api/personalized").then((res) => {
+        await axios.get(api+"/personalized").then((res) => {
           this.list = res.result;
           this.list.length = 8
         });

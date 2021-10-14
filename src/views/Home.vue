@@ -121,6 +121,7 @@ import ShouPlaylist from "../components/Home/shouPlaylist .vue";
 import Audios from "../components/Home/audios.vue";
 import rankWeek from "../components/Home/rankWeek.vue";
 import RankAll from "../components/Home/rankAll.vue";
+import {api} from '../untils/baseProxy'
 export default {
   components: { playlist, ShouPlaylist, Audios, rankWeek, RankAll },
   setup() {
@@ -132,7 +133,7 @@ export default {
       allAuthTypes: [],
       profile: [],
       async getList(id) {
-        await axios.get("/api/user/detail?uid=" + id).then((res) => {
+        await axios.get(api+"/user/detail?uid=" + id).then((res) => {
           console.log(res);
           this.list = res;
           this.profile = res.profile;

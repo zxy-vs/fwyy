@@ -35,13 +35,14 @@ import { reactive, ref, toRefs } from "@vue/reactivity";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { NumberW } from "../../untils/NumberW";
+import { api } from '../../untils/baseProxy';
 export default {
   setup() {
     const Route = useRoute();
     const pl = reactive({
       list: [],
       async getList(id) {
-        await axios.get("/api/user/audio?uid=" + id).then((res) => {
+        await axios.get(api+"/user/audio?uid=" + id).then((res) => {
           this.list = res.djRadios;
         });
       },

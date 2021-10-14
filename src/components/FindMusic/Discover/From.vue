@@ -12,7 +12,6 @@
             <router-link :to="'/discover/toplist?id=' + item.id" class="FromName"
               ><h3>{{ item.name }}</h3></router-link
             >
-            <!--  -->
             <router-link to="#" class="FromPlay play"></router-link>
             <router-link to="#" class="FromPlay bgp"></router-link>
           </div>
@@ -46,6 +45,7 @@
 
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
+import { api } from '../../../untils/baseProxy';
 export default {
   setup() {
     const headList = ref({
@@ -58,13 +58,13 @@ export default {
       contentList: [],
       cList: [],
       async getContentList() {
-        await axios.get("/api/toplist").then((res) => {
+        await axios.get(api+"/toplist").then((res) => {
           this.contentList = res.list;
           this.contentList.length = 3;
         });
         for (let i = 0; i < this.contentList.length; i++) {
           await axios
-            .get("/api/playlist/detail?id=" + this.contentList[i].id)
+            .get(api+"/playlist/detail?id=" + this.contentList[i].id)
             .then((res) => {
               this.cList[i] = res.playlist.tracks;
               this.cList[i].length = 10;
