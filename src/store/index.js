@@ -22,7 +22,6 @@ export default createStore({
     songList: [],//播放列表
     songListIndex: 0,//播放列表的索引
     isLoop:0,//播放下一首的类型 0，1，2
-    isVolume:0,//播放的当前音量
   },
   getters: {
     Transtime(state) {

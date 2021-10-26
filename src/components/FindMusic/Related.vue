@@ -50,22 +50,23 @@
           <relate-list :quan="quan" :data="data" />
         </div>
       </div>
-      <div class="mains_r"></div>
+      <div class="mains_r">
+        <GlobalComMR />
+      </div>
     </section>
   </div>
 </template>
 
 <script>
-import { computed, reactive, ref, toRef, toRefs } from "@vue/reactivity";
+import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
-import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import RelateList from "./Related/RelateList.vue";
 import { Time } from "../../untils/TimeTrans";
 import { useStore } from "vuex";
 import { watchEffect } from "@vue/runtime-core";
-import { api } from '../../untils/baseProxy';
+import { api } from "../../untils/baseProxy";
 export default {
-  components: { GlobalComBtn, RelateList },
+  components: { RelateList },
   setup() {
     const { state, dispatch, commit } = useStore();
     const Route = useRoute();
@@ -77,12 +78,13 @@ export default {
       data: [],
       subscribedCount: 0,
       async getquan(id) {
-        await axios.get(api+"/playlist/detail?id=" + id).then((res) => {
+        await axios.get(api + "/playlist/detail?id=" + id).then((res) => {
           this.quan = res.playlist;
           this.creator = res.playlist.creator;
           this.data = res.playlist.tracks;
           this.birthday = Time(this.creator.birthday);
           this.subscribedCount = res.playlist.subscribedCount;
+          document.title = this.quan.name+' - 歌单 - 网易云音乐';
         });
       },
       async Played() {

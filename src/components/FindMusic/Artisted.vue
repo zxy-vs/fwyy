@@ -5,7 +5,11 @@
         <h3>{{ GSList.name }}</h3>
         <img :src="`${GSList.picUrl}?param=640y300`" alt="" />
         <div class="img"></div>
-        <router-link v-if="GSList.accountId" :to="'/home?id='+GSList.accountId" class="l_cc"></router-link>
+        <router-link
+          v-if="GSList.accountId"
+          :to="'/home?id=' + GSList.accountId"
+          class="l_cc"
+        ></router-link>
         <a href="javascript:;" class="l_ss"></a>
       </div>
       <ul class="l_nav">
@@ -23,12 +27,34 @@
           :RList="RList"
           :GSList="GSList"
           :Desc="Desc"
-          :Album='Album'
-          :Mv='Mv'
+          :Album="Album"
+          :Mv="Mv"
         ></component>
       </keep-alive>
     </div>
-    <div class="A_r"></div>
+    <div class="A_r">
+      <h3>
+        <span>热门歌手</span>
+      </h3>
+      <ul class="A_img">
+        <li v-for="item,index of AImg" :key="index">
+          <router-link :to="'/artist?id='+item.id">
+            <img
+              :src="`${item.picUrl}?param=50y50`"
+              alt=""
+            />
+          </router-link>
+          <p>
+            <router-link :to="'/artist?id='+item.id">{{item.name}}</router-link>
+          </p>
+        </li>
+      </ul>
+      <h3>
+        <span>网易云音乐多端下载</span>
+      </h3>
+      <ul class="Rm_load"></ul>
+      <p class="Rm_loads">同步歌单，随时畅听320k好音乐</p>
+    </div>
   </div>
 </template>
 <script>
@@ -39,7 +65,7 @@ import X from "./Artisted/X.vue";
 import Y from "./Artisted/Y.vue";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
-import { api } from '../../untils/baseProxy';
+import { api } from "../../untils/baseProxy";
 export default {
   components: { R, S, X, Y },
   setup() {
@@ -54,25 +80,36 @@ export default {
       RList: [],
       Desc: [],
       Album: [],
-      Mv:[],
+      Mv: [],
+      AImg: [],
+      async getImg(id) {
+        await axios.get(api + "/simi/artist?id=" + id).then((res) => {
+          console.log(res);
+          this.AImg = res.artists
+          this.AImg.length =6
+        });
+      },
       async getGSList(id) {
-        await axios.get(api+"/artists?id=" + id).then((res) => {
+        await axios.get(api + "/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
+          document.title = res.artist.name+' - 歌手 - 网易云音乐'
           this.RList = res.hotSongs;
         });
       },
       async getDesc(id) {
-        await axios.get(api+"/artist/desc?id=" + id).then((res) => {
+        await axios.get(api + "/artist/desc?id=" + id).then((res) => {
           this.Desc = res;
         });
       },
       async getAlbum(id) {
-        await axios.get(api+"/artist/album?limit=999&id=" + id).then((res) => {
-          this.Album = res.hotAlbums;
-        });
+        await axios
+          .get(api + "/artist/album?limit=999&id=" + id)
+          .then((res) => {
+            this.Album = res.hotAlbums;
+          });
       },
       async getMv(id) {
-        await axios.get(api+"/artist/mv?id=" + id).then((res) => {
+        await axios.get(api + "/artist/mv?id=" + id).then((res) => {
           this.Mv = res.mvs;
         });
       },
@@ -83,6 +120,7 @@ export default {
         GS.getDesc(Route.query.id);
         GS.getAlbum(Route.query.id);
         GS.getMv(Route.query.id);
+        GS.getImg(Route.query.id);
       }
     });
     return {
@@ -100,6 +138,7 @@ export default {
   background-color: #fff;
   border-left: 1px solid #d3d3d3;
   border-right: 1px solid #d3d3d3;
+  display: flex;
   .A_l {
     width: 710px;
     height: 100%;
@@ -198,6 +237,70 @@ export default {
           background-position: right -90px;
         }
       }
+    }
+  }
+  .A_r {
+    width: 270px;
+    padding: 20px 40px 40px 30px;
+    h3 {
+      width: 100%;
+      height: 23px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      color: #333;
+      span {
+        font-weight: bold;
+      }
+    }
+    .A_img {
+      margin-left: -25px;
+      li {
+        float: left;
+        width: 75px;
+        height: 92px;
+        padding-left: 25px;
+        .img {
+          display: block;
+          width: 50px;
+          height: 50px;
+          img {
+            width: 50px;
+            height: 50px;
+          }
+        }
+        p {
+          margin: 0;
+          margin-top: 7px;
+          text-align: center;
+          a {
+            width: 50px;
+            vertical-align: middle;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          a:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+    .A_img::after {
+      clear: both;
+      content: ".";
+      display: block;
+      height: 0;
+      visibility: hidden;
+    }
+    .Rm_load {
+      height: 65px;
+      margin-bottom: 10px;
+      background: url("../../../public/static/sprite.png") no-repeat;
+      background-position: 0 -392px;
+    }
+    .Rm_loads {
+      color: #999;
     }
   }
 }

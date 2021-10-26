@@ -122,7 +122,13 @@
         </div>
       </div>
     </div>
-    <div class="dj_r"></div>
+    <div class="dj_r">
+      <h3>
+        <span>网易云音乐多端下载</span>
+      </h3>
+      <ul class="Rm_load"></ul>
+      <p class="Rm_loads">同步歌单，随时畅听320k好音乐</p>
+    </div>
   </div>
 </template>
 
@@ -132,7 +138,7 @@ import { useRoute } from "vue-router";
 import { Time } from "../../../untils/TimeTrans";
 import { Times } from "../../../untils/TimeTran";
 import { useStore } from "vuex";
-import { api } from '../../../untils/baseProxy';
+import { api } from "../../../untils/baseProxy";
 export default {
   setup() {
     const { state, commit, dispatch } = useStore();
@@ -146,12 +152,13 @@ export default {
       dj: [],
       SongList: [],
       async getList(id) {
-        await axios.get(api+"/dj/program/detail?id=" + id).then((res) => {
+        await axios.get(api + "/dj/program/detail?id=" + id).then((res) => {
           this.List = res.program;
           this.Radio = res.program.radio;
           this.mainSong = res.program.mainSong;
           this.dj = res.program.dj;
           this.SongList = res.program.songs;
+          document.title =this.mainSong.name+' - '+this.dj.brand+' - 电台节目 - 网易云音乐'
         });
       },
     });
@@ -220,6 +227,7 @@ export default {
   background-color: #fff;
   border: 1px solid #d3d3d3;
   border-width: 0 1px;
+  display: flex;
   .dj_l {
     width: 709px;
     border-right: 1px solid #d3d3d3;
@@ -698,6 +706,27 @@ export default {
   }
   .dj_r {
     width: 270px;
+    padding: 20px 40px 40px 30px;
+    h3 {
+      width: 100%;
+      height: 23px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      color: #333;
+      span {
+        font-weight: bold;
+      }
+    }
+    
+    .Rm_load {
+      height: 65px;
+      margin-bottom: 10px;
+      background: url("../../../../public/static/sprite.png") no-repeat;
+      background-position: 0 -392px;
+    }
+    .Rm_loads {
+      color: #999;
+    }
   }
 }
 </style>

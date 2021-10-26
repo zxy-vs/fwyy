@@ -26,12 +26,14 @@
 <script>
 import { NumberW } from "../untils/NumberW";
 import { useStore } from "vuex";
+import { useRoute } from 'vue-router';
 export default {
   props: ["quan", "subscribedCount",'info'],
   setup(props, { emit }) {
+    const Route = useRoute()
     const { state } = useStore();
     const Emits = () => {
-      emit("getids");
+      emit("getids",Route.query.id);
       emit("playing");
       clearInterval(state.tst);
       const pg = document.querySelector(".c_cur")
@@ -39,8 +41,7 @@ export default {
         pg.style.width =
           (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
       }, 1000 / 60);
-    };
-
+    }
     return {
       Emits,
       NumberW,

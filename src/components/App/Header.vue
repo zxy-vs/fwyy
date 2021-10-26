@@ -51,7 +51,7 @@
           <input
             type="text"
             class="search"
-            v-model="Keys"
+            v-model.trim="Keys"
             placeholder="音乐/视频/电台/用户"
             ref="clicks"
           />
@@ -65,7 +65,7 @@
 </template>
 <script>
 import Cookies from "js-cookie";
-import { onMounted, reactive, ref, toRefs, watch } from "vue";
+import { onMounted, reactive, ref, toRefs} from "vue";
 import { useStore } from "vuex";
 import LoginTest from "./LoginTest.vue";
 import Search from "./Search.vue";

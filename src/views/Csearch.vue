@@ -3,7 +3,7 @@
     <div class="c_top"></div>
     <div class="c_c">
       <div class="c_search">
-        <input type="text" v-model="keyss" ref="clicks" />
+        <input type="text" v-model.trim="keyss" ref="clicks" />
         <router-link
           :to="`/search?type=${Route.query.type}&key=${keyss}`"
           class="btn"

@@ -73,6 +73,7 @@ export default {
             this.cat = cat
             this.list = res.playlists;
             this.total = Math.ceil(res.total/35)*10
+            document.title =this.cat+'歌单 - 歌单 - 网易云音乐'
           });
       },
       async getHead() {

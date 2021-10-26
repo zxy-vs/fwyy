@@ -48,15 +48,20 @@ import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import {NumberW} from '../../untils/NumberW'
 import { api } from '../../untils/baseProxy';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    document.querySelector('audio').pause();
+    const {state} = useStore()
+    state.isPlay = false
     const Route = useRoute();
-    const state = reactive({
+    const stat = reactive({
       stateList: [],
       video: "",
       async getStateList(id) {
         await axios.get(api+"/mv/detail?mvid=" + id).then((res) => {
           this.stateList = res.data;
+          document.title = res.data.name
         });
       },
       async getVideo(id) {
@@ -65,10 +70,10 @@ export default {
         });
       },
     });
-    state.getStateList(Route.query.id);
-    state.getVideo(Route.query.id);
+    stat.getStateList(Route.query.id);
+    stat.getVideo(Route.query.id);
     return {
-      ...toRefs(state),NumberW
+      ...toRefs(stat),NumberW
     };
   },
 };

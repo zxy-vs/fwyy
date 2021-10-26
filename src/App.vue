@@ -6,7 +6,7 @@
     </main>
     <div class="fixed_play" ref="keys">
       <Play
-        v-if="Route.path != '/mv'"
+        v-show="Route.path != '/mv'&&Route.path != '/video'"
         @pauseAo="PauseAo"
         @playAo="PlayAo"
         @jump="jump"

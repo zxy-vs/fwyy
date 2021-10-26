@@ -110,6 +110,8 @@ export default {
         await axios.get(api+"/dj/detail?rid=" + id).then((res) => {
           this.List = res.data;
           this.dj = res.data.dj;
+          document.title =this.List.name+' - 主播 - 电台 - 网易云音乐'
+
         });
       },
       async getSongList(id) {

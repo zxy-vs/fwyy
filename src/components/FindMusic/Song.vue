@@ -34,7 +34,9 @@
         </div>
       </div>
     </div>
-    <div class="mains_r"></div>
+    <div class="mains_r">
+      <song-rm />
+    </div>
   </div>
 </template>
 
@@ -43,20 +45,21 @@ import { reactive, toRef, toRefs } from "@vue/reactivity";
 import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { watchEffect } from '@vue/runtime-core';
-import { api } from '../../untils/baseProxy';
+import { watchEffect } from "@vue/runtime-core";
+import { api } from "../../untils/baseProxy";
+import SongRm from "./song/songRm.vue";
 export default {
-  components: { GlobalComBtn },
+  components: { GlobalComBtn, SongRm },
   setup() {
     const Route = useRoute();
-    const { state,commit, dispatch } = useStore();
-    const getid = async () => {
-      state.ids = id
+    const { state, commit, dispatch } = useStore();
+    const getid = async (id) => {
+      state.ids = id;
       await dispatch("getAudios", id);
-      commit('setPlayText',stateL.quan)
-      state.picUrl = stateL.quan.al.picUrl
-      commit('isSetPlay')
-      state.time = stateL.quan.dt
+      commit("setPlayText", stateL.quan);
+      state.picUrl = stateL.quan.al.picUrl;
+      commit("isSetPlay");
+      state.time = stateL.quan.dt;
       const ao = document.querySelector("audio");
       if (ao.played) {
         ao.load();
@@ -70,15 +73,24 @@ export default {
       al: [],
       ar: [],
       lyric: "",
-      info:[],
+      info: [],
       subscribedCount: 0,
       async getquan(id) {
-        await axios.get(api+"/song/detail?ids=" + id).then((res) => {
+        await axios.get(api + "/song/detail?ids=" + id).then((res) => {
           this.quan = res.songs[0];
           this.al = res.songs[0].al;
           this.ar = res.songs[0].ar;
+          let str = this.quan.name + "- ";
+          for (let i = 0; i < this.ar.length; i++) {
+            if (i == this.ar.length - 1) {
+              str += this.ar[i].name+ "- 单曲 - 网易云音乐";
+            } else {
+              str += this.ar[i].name + "/";
+            }
+          }
+          document.title = str
         });
-        await axios.get(api+"/lyric?id=" + id).then((res) => {
+        await axios.get(api + "/lyric?id=" + id).then((res) => {
           if (res.lrc) {
             this.lyric = res.lrc.lyric;
             this.lyric = this.lyric.replace(/\n/g, "<br>");
@@ -88,13 +100,11 @@ export default {
         });
       },
     });
-    watchEffect(()=>{
-      if(Route.path =='/song'){
-    stateL.getquan(Route.query.id);
-
+    watchEffect(() => {
+      if (Route.path == "/song") {
+        stateL.getquan(Route.query.id);
       }
-
-    })
+    });
     return {
       ...toRefs(stateL),
       getid,

@@ -11,14 +11,14 @@
             <div class="t_t">
               <i></i>
               <div class="t_title">
-                <h2>{{album.name }}</h2>
+                <h2>{{ album.name }}</h2>
               </div>
             </div>
             <div class="t_tag">
               <b>歌手：</b>
               <span v-for="(item, index) of album.artists" :key="index">
                 <!--  -->
-                <router-link :to="'/artist?id='+item.id">
+                <router-link :to="'/artist?id=' + item.id">
                   {{ item.name }}
                 </router-link>
                 <i v-if="album.artists.length - 1 != index">&nbsp;/&nbsp;</i>
@@ -26,11 +26,11 @@
             </div>
             <div class="t_tag">
               <b>发行时间：</b>
-              <span>{{Time(album.publishTime)}}</span>
+              <span>{{ Time(album.publishTime) }}</span>
             </div>
             <div class="t_tag" v-if="album.company">
               <b>发行公司：</b>
-                <span>{{album.company}}</span>
+              <span>{{ album.company }}</span>
             </div>
             <div class="t_b">
               <global-com-btn
@@ -43,10 +43,10 @@
           </div>
         </div>
         <div class="mains_l_center">
-          <label >介绍： </label><span v-html="quan.description"></span>
+          <label>介绍： </label><span v-html="quan.description"></span>
         </div>
         <div class="mains_l_bottom">
-           <alb-list :quan="quan" :data="data" />
+          <alb-list :quan="quan" :data="data" />
         </div>
       </div>
       <div class="mains_r"></div>
@@ -55,14 +55,14 @@
 </template>
 
 <script>
-import {reactive,toRefs } from "@vue/reactivity";
+import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { Time } from "../../untils/TimeTrans";
 // import { nHbr } from "../../untils/nHbr";
 import { useStore } from "vuex";
-import AlbList from './Albumed/AlbList.vue';
-import { api } from '../../untils/baseProxy';
+import AlbList from "./Albumed/AlbList.vue";
+import { api } from "../../untils/baseProxy";
 export default {
   components: { GlobalComBtn, AlbList },
   setup() {
@@ -72,16 +72,25 @@ export default {
     } = useRoute();
     const stateL = reactive({
       quan: [],
-      info:[],
-      album:[],
+      info: [],
+      album: [],
       data: [],
       subscribedCount: 0,
       async getquan(id) {
-        await axios.get(api+"/album?id=" + id).then((res) => {
+        await axios.get(api + "/album?id=" + id).then((res) => {
           this.quan = res.album;
-          this.album = res.album
-          this.info = res.album.info
+          this.album = res.album;
+          this.info = res.album.info;
           this.data = res.songs;
+          let str = this.album.name + " - ";
+          for (let i = 0; i < this.album.artists.length; i++) {
+            if (i == this.album.artists.length - 1) {
+              str += this.album.artists[i].name + " - 专辑 - 网易云音乐";
+            } else {
+              str += this.album.artists[i].name + "/";
+            }
+          }
+          document.title = str;
         });
       },
       async Played() {
@@ -102,7 +111,8 @@ export default {
     });
     stateL.getquan(id);
     return {
-      ...toRefs(stateL),Time
+      ...toRefs(stateL),
+      Time,
     };
   },
 };
@@ -181,15 +191,15 @@ div {
               font-weight: normal;
               color: #666;
             }
-            a{
-                color: #0c73c2;
-                text-decoration: none;
+            a {
+              color: #0c73c2;
+              text-decoration: none;
             }
-            a:hover{
-                text-decoration: underline;
+            a:hover {
+              text-decoration: underline;
             }
-            span{
-                color: #666;
+            span {
+              color: #666;
             }
           }
           .t_x {
@@ -205,7 +215,7 @@ div {
           }
         }
       }
-      .mains_l_center{
+      .mains_l_center {
         float: left;
         width: 100%;
         max-height: 200px;
@@ -213,7 +223,7 @@ div {
         line-height: 18px;
         overflow: hidden;
         text-overflow: ellipsis;
-      } 
+      }
       .mains_l_bottom {
         width: 100%;
         float: left;

@@ -22,7 +22,7 @@
         <album-com :item="item" />
       </li>
     </ul>
-     <div class="a_pag">
+    <div class="a_pag">
       <a-pagination v-model:current="offset" :total="total" />
     </div>
   </div>
@@ -31,33 +31,38 @@
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import AlbumCom from "./Album/AlbumCom.vue";
-import { watchEffect } from '@vue/runtime-core';
-import { useRoute } from 'vue-router';
-import { api } from '../../untils/baseProxy';
+import { watchEffect } from "@vue/runtime-core";
+import { useRoute } from "vue-router";
+import { api } from "../../untils/baseProxy";
 export default {
   components: { AlbumCom },
   setup() {
-      const Route = useRoute()
+    document.title = "新碟上架 - 网易云音乐"
+    const Route = useRoute();
     const lbt = reactive({
       lbtList: [],
       quanList: [],
-      offset:1,
-      total:0,
+      offset: 1,
+      total: 0,
       async getlbt() {
-        await axios.get(api+"/album/newest").then((res) => {
+        await axios.get(api + "/album/newest").then((res) => {
           this.lbtList = res.albums;
           this.lbtList.length = 10;
         });
       },
-      async getquanList(offset,area='ALL') {
-        await axios.get(`${api}/album/new?offset=${(offset-1)*35}&limit=35&area=${area}`).then(res=>{
-            this.quanList = res.albums
-            this.total = Math.ceil(res.total/35)*10
-        })
+      async getquanList(offset, area = "ALL") {
+        await axios
+          .get(
+            `${api}/album/new?offset=${(offset - 1) * 35}&limit=35&area=${area}`
+          )
+          .then((res) => {
+            this.quanList = res.albums;
+            this.total = Math.ceil(res.total / 35) * 10;
+          });
       },
     });
     lbt.getlbt();
-    
+
     const TL = ref([
       { name: "全部", url: "/discover/album?area=ALL" },
       { name: "华语", url: "/discover/album?area=ZH" },
@@ -65,9 +70,9 @@ export default {
       { name: "韩国", url: "/discover/album?area=KR" },
       { name: "日本", url: "/discover/album?area=JP" },
     ]);
-    watchEffect(()=>{
-        lbt.getquanList(lbt.offset,Route.query.area)
-    })
+    watchEffect(() => {
+      lbt.getquanList(lbt.offset, Route.query.area);
+    });
     return {
       ...toRefs(lbt),
       TL,
@@ -133,8 +138,8 @@ export default {
       line-height: 1.4;
     }
   }
-  .a_pag{
-      margin-left: 50%;
+  .a_pag {
+    margin-left: 50%;
     transform: translateX(-50%);
   }
 }

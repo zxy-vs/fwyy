@@ -4,39 +4,37 @@
       <p class="Ntext">
         登录网易云音乐，可以享受无限收藏的乐趣，并且无限同步到手机
       </p>
-      <router-link to="" class="login" @click="isTrue = true"
-        >用户登录</router-link
-      >
+      <a href="javascript:;" class="login" @click="isTrue = true">用户登录</a>
     </div>
     <div class="loginEnd" v-if="user">
       <div>
-        <router-link to="#" class="loginImg">
+        <router-link :to="'/home?id=' + userList.userId" class="loginImg">
           <img :src="userList.avatarUrl" alt="" />
         </router-link>
         <div class="logintext">
-          <router-link to="#" class="lname">{{
+          <router-link :to="'/home?id=' + userList.userId" class="lname">{{
             userList.nickname
           }}</router-link>
-          <router-link to="#" class="lv">{{lv}}<i></i></router-link>
+          <a href="javascript:;" class="lv">{{ lv }}<i></i></a>
           <a href="javascript:;" class="lq">签到<i></i></a>
         </div>
       </div>
       <ul>
         <li>
           <router-link to="#">
-            <b>{{userList.djStatus}}</b>
+            <b>{{ userList.djStatus }}</b>
             <span>动态</span>
           </router-link>
         </li>
         <li>
           <router-link to="#">
-            <b>{{userList.newFollows}}</b>
+            <b>{{ userList.newFollows }}</b>
             <span>关注</span>
           </router-link>
         </li>
         <li>
           <router-link to="#">
-            <b>{{userList.followeds}}</b>
+            <b>{{ userList.followeds }}</b>
             <span>粉丝</span>
           </router-link>
         </li>
@@ -54,32 +52,34 @@
 import Cookies from "js-cookie";
 import { ref, toRefs } from "@vue/reactivity";
 import { useStore } from "vuex";
-import { useRouter } from 'vue-router';
-import { api } from '../../../untils/baseProxy';
+import { useRouter } from "vue-router";
+import { api } from "../../../untils/baseProxy";
 export default {
   setup() {
-    const Router = useRouter()
+    const Router = useRouter();
     const { state } = useStore();
     const user = Cookies.get("userId");
     const userList = ref([]);
-    const lv = ref(0)
+    const lv = ref(0);
     const userGet = async (user) => {
-      await axios.get(api+"/user/detail?uid=" + user).then((res) => {
+      await axios.get(api + "/user/detail?uid=" + user).then((res) => {
         userList.value = res.profile;
-        lv.value = res.level
+        lv.value = res.level;
       });
     };
     if (user) {
       userGet(user);
     }
-    const esc = ()=>{
-      Cookies.remove('userId')
-      Router.go()
-    }
+    const esc = () => {
+      Cookies.remove("userId");
+      Router.go();
+    };
     return {
       ...toRefs(state),
       user,
-      userList,lv,esc
+      userList,
+      lv,
+      esc,
     };
   },
 };
@@ -164,7 +164,7 @@ export default {
           font-size: 14px;
           white-space: nowrap;
           overflow: hidden;
-          text-overflow:ellipsis;
+          text-overflow: ellipsis;
         }
         .lv {
           display: block;

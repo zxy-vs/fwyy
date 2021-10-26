@@ -38,14 +38,19 @@
             :title="playText.name"
             >{{ playText.name }}</router-link
           >
-          <router-link title="MV" class="p_mv" v-if="playText.mv" :to="'/mv?id='+playText.mv"></router-link>
+          <router-link
+            title="MV"
+            class="p_mv"
+            v-if="playText.mv"
+            :to="'/mv?id=' + playText.mv"
+          ></router-link>
           <span class="p_author ellipsis" v-if="playText.ar">
             <span
               class="p_author_c"
               v-for="(item, index) of playText.ar"
               :key="index"
             >
-              <router-link :to="'/artist?id='+item.id" :title="item.name">{{
+              <router-link :to="'/artist?id=' + item.id" :title="item.name">{{
                 item.name
               }}</router-link>
               <span v-if="!(index == playText.ar.length - 1)"
@@ -74,7 +79,7 @@
         <router-link to="#" class="share" title="分享"></router-link>
       </div>
       <div class="f_ctrl">
-        <div class="m_vol" v-show="isTT" >
+        <div class="m_vol" v-show="isTT">
           <div class="f_barbg"></div>
           <div class="vbg">
             <div class="curr" ref="curr"></div>
@@ -85,7 +90,9 @@
         <a href="javascript:;" class="mode" title="循环" ref="mode"></a>
         <span class="f_add">
           <span class="tip">已添加到播放列表</span>
-          <router-link to="#" title="播放列表">{{songList.length}}</router-link>
+          <router-link to="#" title="播放列表">{{
+            songList.length
+          }}</router-link>
         </span>
         <div class="mode_show" ref="ms">随机</div>
       </div>
@@ -97,7 +104,7 @@
 import { ref, toRefs } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { Times } from "../../untils/TimeTran";
-import { onMounted } from "@vue/runtime-core";
+import { onBeforeUnmount, onMounted } from "@vue/runtime-core";
 export default {
   setup(props, { emit }) {
     const { state, commit, dispatch } = useStore();
@@ -254,28 +261,27 @@ export default {
         function bfqingshu() {
           bf.parentNode.onmousemove = null;
           bf.parentNode.onmouseup = null;
-          bf.parentNode.onmouseleave =null;
+          bf.parentNode.onmouseleave = null;
         }
       };
       fv.value.onclick = function (e) {
         e.stopPropagation();
-          isTT.value = !isTT.value;
-          bf.parentNode.onmouseover = function () {
-            isTT.value = true;
+        isTT.value = !isTT.value;
+        bf.parentNode.onmouseover = function () {
+          isTT.value = true;
+          document.documentElement.onclick = null;
+        };
+        bf.parentNode.addEventListener("mouseleave", function () {
+          document.documentElement.onclick = function () {
+            isTT.value = false;
             document.documentElement.onclick = null;
           };
-          bf.parentNode.addEventListener('mouseleave',function () {
-            document.documentElement.onclick = function () {
-              isTT.value = false;
-              document.documentElement.onclick = null;
-            }
-          })
-          document.documentElement.onclick = function () {
-              isTT.value = false;
-            }
+        });
+        document.documentElement.onclick = function () {
+          isTT.value = false;
         };
+      };
     });
-
     return {
       ...toRefs(state),
       trans,
@@ -290,7 +296,7 @@ export default {
       curr,
       fc,
       fv,
-      ms
+      ms,
     };
   },
 };

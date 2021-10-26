@@ -50,7 +50,7 @@
         }}</router-link>
       </td>
       <td width="72" style="width: 72px">
-        <span class="t">{{ Times(item.dt) }}</span>
+        <span class="t">{{ Times(item.dt)}}</span>
       </td>
     </tr>
   </table>

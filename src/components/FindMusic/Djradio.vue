@@ -160,6 +160,7 @@ import { api } from '../../untils/baseProxy';
 export default {
   components: { GlobalComDjT, GlobalComDj },
   setup() {
+    document.title='主播电台 - 网易云音乐'
     const Route = useRoute();
     const Flist = reactive([[], [], [], [], []]);
     const logo = reactive({

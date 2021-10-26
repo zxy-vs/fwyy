@@ -44,10 +44,14 @@ import { NumberW } from "../../untils/NumberW";
 import { watchEffect } from "@vue/runtime-core";
 import { Time } from "../../untils/TimeTrans";
 import { api } from '../../untils/baseProxy';
+import { useStore } from 'vuex';
 export default {
   setup() {
     const Route = useRoute();
-    const state = reactive({
+    document.querySelector('audio').pause();
+    const {state} = useStore()
+    state.isPlay = false
+    const stat = reactive({
       stateList: [],
       video: "",
       creator: [],
@@ -55,6 +59,7 @@ export default {
         await axios.get(api+"/video/detail?id=" + id).then((res) => {
           this.stateList = res.data;
           this.creator = res.data.creator;
+          document.title = this.stateList.title
         });
       },
       async getVideo(id) {
@@ -65,13 +70,13 @@ export default {
     });
     watchEffect(() => {
       if (Route.path == "/video") {
-        state.getStateList(Route.query.id);
-        state.getVideo(Route.query.id);
+        stat.getStateList(Route.query.id);
+        stat.getVideo(Route.query.id);
       }
     });
 
     return {
-      ...toRefs(state),
+      ...toRefs(stat),
       NumberW,
       Time,
     };

@@ -183,6 +183,7 @@ export default {
           this.quan = res.playlist;
           this.subscribedCount = res.playlist.subscribedCount;
           this.TpList = res.playlist.tracks;
+          document.title = this.quan.name+'- 排行榜 - 网易云音乐'
         });
       },
     });
