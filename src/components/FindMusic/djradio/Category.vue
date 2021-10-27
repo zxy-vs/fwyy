@@ -57,8 +57,10 @@ import { reactive, toRefs } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
 import { api } from '../../../untils/baseProxy';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const {state} = useStore()
     const Route = useRoute();
     const Cat = reactive({
       TList: [],
@@ -69,8 +71,8 @@ export default {
         await axios.get(api+"/dj/recommend/type?type=" + id).then((res) => {
           this.TList = res.djRadios;
           this.TList.length = 5;
-          console.log(res.djRadios[0].category);
           document.title = res.djRadios[0].category+' - 主播电台 - 网易云音乐'
+          state.title = res.djRadios[0].category+' - 主播电台 - 网易云音乐'
         });
       },
       async getRList(id, offset = 0) {

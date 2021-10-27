@@ -89,6 +89,7 @@ export default {
             }
           }
           document.title = str
+          state.title = str
         });
         await axios.get(api + "/lyric?id=" + id).then((res) => {
           if (res.lrc) {

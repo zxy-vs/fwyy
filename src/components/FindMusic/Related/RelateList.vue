@@ -77,7 +77,6 @@ import { Times } from "../../../untils/TimeTran";
 export default {
   props: ["quan", "data"],
   setup(props) {
-    console.log(props.data);
     const { state, dispatch } = useStore();
     const ao = document.querySelector("audio");
     const Played = async (index) => {

@@ -51,6 +51,10 @@ export default {
       ao.value.ontimeupdate = function () {
         state.currentTime = this.currentTime;
         this.volume = state.isVolume;
+        document.title = '▶  '+state.playText.name
+        };
+      ao.value.onpause = function () {
+       document.title = state.title
       };
       keys.value.onmouseenter = me;
       keys.value.onmouseleave = ml;

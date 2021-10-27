@@ -67,8 +67,11 @@ export default {
       },
     });
     watchEffect(() => {
-      Rm.getList(Route.query.id);
+      if(Route.path=='/playlist'){
+Rm.getList(Route.query.id);
       Rm.getLists(Route.query.id);
+      }
+      
     });
     return {
       ...toRefs(Rm),

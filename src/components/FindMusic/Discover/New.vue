@@ -7,15 +7,22 @@
           <li v-for="(item, index) of lbtList" :key="index">
             <div class="n_b_s">
               <img v-lazy="item.picUrl" alt="" />
-              <router-link :to="'/album?id='+item.id" class="n_s"></router-link>
-              <router-link to="#" class="n_p"></router-link>
+              <router-link
+                :to="'/album?id=' + item.id"
+                class="n_s"
+              ></router-link>
+              <a href="javascript:;" class="n_p" @click="Play(item.id)"></a>
             </div>
             <p class="n_b_x">
-              <router-link :to="'/album?id='+item.id" class="n_w">{{ item.name }}</router-link>
+              <router-link :to="'/album?id=' + item.id" class="n_w">{{
+                item.name
+              }}</router-link>
             </p>
             <p class="n_b_x">
               <span v-for="(items, index) of item.artists" :key="index">
-                <router-link :to="'/artist?id='+item.artist.id">{{ items.name }} </router-link>
+                <router-link :to="'/artist?id=' + item.artist.id"
+                  >{{ items.name }}
+                </router-link>
                 <i v-if="item.artists.length - 1 != index">&nbsp;/&nbsp;</i>
               </span>
             </p>
@@ -32,18 +39,37 @@
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
-import { api } from '../../../untils/baseProxy';
+import { api } from "../../../untils/baseProxy";
+import { useStore } from "vuex";
 export default {
   setup() {
+    const { state, commit, dispatch } = useStore();
     const headList = ref({
       title: "新碟上架",
       titleUrl: "/discover/album",
       moreUrl: "/discover/album",
     });
+    let Play = async (id) => {
+      await axios.get(api + "/album?id=" + id).then(async (res) => {
+            state.songListIndex = 0;
+            state.songList = res.songs;
+            state.ids = res.songs[state.songListIndex].id;
+            await dispatch("getAudios", res.songs[state.songListIndex].id);
+            await dispatch("getPlayText", res.songs[state.songListIndex].id);
+            commit("isSetPlay");
+            const ao = document.querySelector("audio");
+            if (ao.played) {
+              ao.load();
+              ao.play();
+            } else {
+              ao.play();
+            }
+          });
+    };
     const lbt = reactive({
       lbtList: [],
       async getlbt() {
-        await axios.get(api+"/album/newest").then((res) => {
+        await axios.get(api + "/album/newest").then((res) => {
           this.lbtList = res.albums;
           this.lbtList.length = 10;
         });
@@ -92,6 +118,7 @@ export default {
       left,
       right,
       content,
+      Play,
     };
   },
 };

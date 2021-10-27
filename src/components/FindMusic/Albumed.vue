@@ -91,6 +91,7 @@ export default {
             }
           }
           document.title = str;
+          state.title = str;
         });
       },
       async Played() {

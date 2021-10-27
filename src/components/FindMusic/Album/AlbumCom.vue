@@ -3,7 +3,7 @@
     <div class="n_b_s">
       <img :src="`${item.picUrl}?param=130y130`" alt="" />
       <router-link :to="'/album?id=' + item.id" class="n_s"></router-link>
-      <router-link to="#" class="n_p"></router-link>
+      <a href="javascript:;" class="n_p" @click="play(item.id)"></a>
     </div>
     <p class="n_b_x">
       <router-link :to="'/album?id=' + item.id" class="n_w">{{
@@ -12,7 +12,9 @@
     </p>
     <p class="n_b_xs">
       <span v-for="(items, index) of item.artists" :key="index">
-        <router-link :to="'/artist?id='+items.id">{{ items.name }} </router-link>
+        <router-link :to="'/artist?id=' + items.id"
+          >{{ items.name }}
+        </router-link>
         <i v-if="item.artists.length - 1 != index">&nbsp;/&nbsp;</i>
       </span>
     </p>
@@ -20,9 +22,35 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
+import { api } from '../../../untils/baseProxy';
 export default {
   props: ["item"],
-};
+  setup(props) {
+    const {state,commit,dispatch} = useStore()
+    let play;
+    if (props.item) {
+      play = async (id) => {
+        await axios.get(api + "/album?id=" + id).then(async (res) => {
+          state.songListIndex = 0
+          state.songList = res.songs;
+          state.ids = res.songs[state.songListIndex].id;
+          await dispatch("getAudios", res.songs[state.songListIndex].id);
+          await dispatch("getPlayText", res.songs[state.songListIndex].id);
+          commit("isSetPlay");
+          const ao = document.querySelector("audio");
+          if (ao.played) {
+            ao.load();
+            ao.play();
+          } else {
+            ao.play();
+          }
+        });
+      }
+    }
+    return { play };
+  }
+}
 </script>
 
 <style lang="less" scoped>

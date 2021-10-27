@@ -122,10 +122,12 @@ import Audios from "../components/Home/audios.vue";
 import rankWeek from "../components/Home/rankWeek.vue";
 import RankAll from "../components/Home/rankAll.vue";
 import {api} from '../untils/baseProxy'
+import { useStore } from 'vuex';
 export default {
   components: { playlist, ShouPlaylist, Audios, rankWeek, RankAll },
   setup() {
     const Route = useRoute();
+    const {state} = useStore()
     const Is = ref(0);
     const IsShow = ref(["rankWeek", "rankAll"]);
     const home = reactive({
@@ -134,10 +136,11 @@ export default {
       profile: [],
       async getList(id) {
         await axios.get(api+"/user/detail?uid=" + id).then((res) => {
-          console.log(res);
           this.list = res;
           this.profile = res.profile;
           this.allAuthTypes = res.profile.allAuthTypes;
+          document.title = this.profile.nickname+' - 用户 - 网易云音乐'
+          state.title = this.profile.nickname+' - 用户 - 网易云音乐'
         });
       },
     });

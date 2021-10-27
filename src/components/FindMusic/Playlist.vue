@@ -51,18 +51,20 @@
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { onMounted, watchEffect } from "@vue/runtime-core";
-import { useRoute} from 'vue-router';
-import { api } from '../../untils/baseProxy';
+import { useRoute } from "vue-router";
+import { api } from "../../untils/baseProxy";
+import { useStore } from 'vuex';
 export default {
   setup() {
-    const Route = useRoute()
+    const {state} = useStore()
+    const Route = useRoute();
     const PL = reactive({
       list: [],
       Hlist: [],
       HHlist: [],
-      cat:'',
-      total:0,
-      async getList(order='hot', cat='全部', offset=0) {
+      cat: "",
+      total: 0,
+      async getList(order = "hot", cat = "全部", offset = 0) {
         await axios
           .get(
             `${api}/top/playlist?order=${order}&cat=${cat}&limit=35&offset=${
@@ -70,14 +72,15 @@ export default {
             }`
           )
           .then((res) => {
-            this.cat = cat
+            this.cat = cat;
             this.list = res.playlists;
-            this.total = Math.ceil(res.total/35)*10
-            document.title =this.cat+'歌单 - 歌单 - 网易云音乐'
+            this.total = Math.ceil(res.total / 35) * 10;
+            document.title = this.cat + "歌单 - 歌单 - 网易云音乐";
+            state.title = this.cat + "歌单 - 歌单 - 网易云音乐";
           });
       },
       async getHead() {
-        await axios.get(api+"/playlist/catlist").then((res) => {
+        await axios.get(api + "/playlist/catlist").then((res) => {
           this.Hlist = res.categories;
           let o = [];
           let I = [];
@@ -116,22 +119,22 @@ export default {
         e.stopPropagation();
         isHead.value = !isHead.value;
         HList.value.onmouseover = function () {
-            isHead.value = true;
-            document.documentElement.onclick=null
+          isHead.value = true;
+          document.documentElement.onclick = null;
         };
         HList.value.onmouseleave = function () {
           document.documentElement.onclick = function () {
             isHead.value = false;
-            document.documentElement.onclick=null
+            document.documentElement.onclick = null;
           };
         };
         document.documentElement.onclick = function () {
-            isHead.value = false;
-          };
+          isHead.value = false;
+        };
       };
     });
     watchEffect(() => {
-      PL.getList(Route.query.order,Route.query.cat,current.value-1);
+        PL.getList(Route.query.order, Route.query.cat, current.value - 1);
     });
     return {
       ...toRefs(PL),

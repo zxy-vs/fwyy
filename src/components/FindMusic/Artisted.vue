@@ -66,10 +66,12 @@ import Y from "./Artisted/Y.vue";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
 import { api } from "../../untils/baseProxy";
+import { useStore } from 'vuex';
 export default {
   components: { R, S, X, Y },
   setup() {
     const Route = useRoute();
+    const {state} = useStore()
     const nav = reactive({
       name: ["热门作品", "所有专辑", "相关MV", "艺人介绍"],
       is: ["R", "S", "X", "Y"],
@@ -93,6 +95,7 @@ export default {
         await axios.get(api + "/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
           document.title = res.artist.name+' - 歌手 - 网易云音乐'
+          state.title = res.artist.name+' - 歌手 - 网易云音乐'
           this.RList = res.hotSongs;
         });
       },

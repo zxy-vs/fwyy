@@ -4,7 +4,7 @@
       <div class="n_b_s">
         <img :src="`${item.blurPicUrl}?param=120y120`" alt="" />
         <router-link :to="'/album?id=' + item.id" class="n_s"></router-link>
-        <router-link to="#" class="n_p"></router-link>
+        <a href="javascript:;" class="n_p" @click="Play(item.id)"></a>
       </div>
       <p class="n_b_x">
         <router-link :to="'/album?id=' + item.id" class="n_w">{{
@@ -24,8 +24,36 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
+import { api } from '../../../untils/baseProxy';
 export default {
   props: ["Album"],
+  setup(props){
+    const {state,commit,dispatch} = useStore()
+    let Play
+    if(props.Album){
+      Play = async (id) => {
+        await axios.get(api + "/album?id=" + id).then(async (res) => {
+          state.songListIndex = 0
+          state.songList = res.songs;
+          state.ids = res.songs[state.songListIndex].id;
+          await dispatch("getAudios", res.songs[state.songListIndex].id);
+          await dispatch("getPlayText", res.songs[state.songListIndex].id);
+          commit("isSetPlay");
+          const ao = document.querySelector("audio");
+          if (ao.played) {
+            ao.load();
+            ao.play();
+          } else {
+            ao.play();
+          }
+        });
+    }
+    return {
+      Play
+    }
+  }
+  }
 };
 </script>
 

@@ -184,6 +184,7 @@ export default {
           this.subscribedCount = res.playlist.subscribedCount;
           this.TpList = res.playlist.tracks;
           document.title = this.quan.name+'- 排行榜 - 网易云音乐'
+          state.title = this.quan.name+'- 排行榜 - 网易云音乐'
         });
       },
     });

@@ -159,6 +159,7 @@ export default {
           this.dj = res.program.dj;
           this.SongList = res.program.songs;
           document.title =this.mainSong.name+' - '+this.dj.brand+' - 电台节目 - 网易云音乐'
+          state.title =this.mainSong.name+' - '+this.dj.brand+' - 电台节目 - 网易云音乐'
         });
       },
     });

@@ -156,63 +156,74 @@ import { reactive, toRefs, ref } from "@vue/reactivity";
 import { useRoute } from "vue-router";
 import GlobalComDjT from "../../GlobalCom/GlobalComDjT.vue";
 import GlobalComDj from "../../GlobalCom/GlobalComDj.vue";
-import { api } from '../../untils/baseProxy';
+import { api } from "../../untils/baseProxy";
+import { useStore } from "vuex";
+import { watchEffect } from "@vue/runtime-core";
 export default {
   components: { GlobalComDjT, GlobalComDj },
   setup() {
-    document.title='主播电台 - 网易云音乐'
+    const { state } = useStore();
     const Route = useRoute();
     const Flist = reactive([[], [], [], [], []]);
+    const title = (path) => {
+      if (path == "/discover/djradio") {
+        document.title = "主播电台 - 网易云音乐";
+        state.title = "主播电台 - 网易云音乐";
+      }
+    };
     const logo = reactive({
       logoList: [],
       SList: [],
       PList: [],
       isShow: true,
       async getLogo() {
-        await axios.get(api+"/dj/catelist").then((res) => {
+        await axios.get(api + "/dj/catelist").then((res) => {
           this.logoList = res.categories;
         });
       },
       async getSlist() {
-        await axios.get(api+"/program/recommend").then((res) => {
+        await axios.get(api + "/program/recommend").then((res) => {
           this.SList = res.programs;
         });
       },
       async getPlist() {
-        await axios.get(api+"/dj/program/toplist?limit=10").then((res) => {
+        await axios.get(api + "/dj/program/toplist?limit=10").then((res) => {
           this.PList = res.toplist;
         });
       },
       async getFList1() {
-        await axios.get(api+"/dj/recommend/type?type=2").then((res) => {
+        await axios.get(api + "/dj/recommend/type?type=2").then((res) => {
           Flist[0] = res.djRadios;
           Flist[0].length = 4;
         });
       },
       async getFList2() {
-        await axios.get(api+"/dj/recommend/type?type=6").then((res) => {
+        await axios.get(api + "/dj/recommend/type?type=6").then((res) => {
           Flist[1] = res.djRadios;
           Flist[1].length = 4;
         });
       },
       async getFList3() {
-        await axios.get(api+"/dj/recommend/type?type=3").then((res) => {
+        await axios.get(api + "/dj/recommend/type?type=3").then((res) => {
           Flist[2] = res.djRadios;
           Flist[2].length = 4;
         });
       },
       async getFList4() {
-        await axios.get(api+"/dj/recommend/type?type=2001").then((res) => {
+        await axios.get(api + "/dj/recommend/type?type=2001").then((res) => {
           Flist[3] = res.djRadios;
           Flist[3].length = 4;
         });
       },
       async getFList5() {
-        await axios.get(api+"/dj/recommend/type?type=11").then((res) => {
+        await axios.get(api + "/dj/recommend/type?type=11").then((res) => {
           Flist[4] = res.djRadios;
           Flist[4].length = 4;
         });
       },
+    });
+    watchEffect(() => {
+      title(Route.path)
     });
     logo.getLogo();
     logo.getSlist();

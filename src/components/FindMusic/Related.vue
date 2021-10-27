@@ -85,6 +85,7 @@ export default {
           this.birthday = Time(this.creator.birthday);
           this.subscribedCount = res.playlist.subscribedCount;
           document.title = this.quan.name+' - 歌单 - 网易云音乐';
+          state.title = this.quan.name+' - 歌单 - 网易云音乐'
         });
       },
       async Played() {

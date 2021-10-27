@@ -5,7 +5,7 @@
     <img v-if="list.picUrl" v-lazy='`${list.picUrl}?param=140y140`' alt="" />
     <router-link :to="'/playlist?id='+list.id" class="comLink"></router-link>
     <div class="comBottom">
-      <router-link to="#" class="bottomLink"></router-link>
+      <a href="javascript:;" class="bottomLink" @click="Play(list.id)"></a>
       <span class="comIcon"></span>
       <span class="comNb">{{count}}</span>
     </div>
@@ -21,15 +21,37 @@
 <script>
 import { computed } from '@vue/reactivity';
 import {NumberW } from '../untils/NumberW'
+import { useStore } from 'vuex';
+import { api } from '../untils/baseProxy';
 export default {
   props:['list'],
   setup(props){
-    props.list.playCount
+    const {state,commit,dispatch} =useStore()
     const count = computed(()=>{
       return  NumberW(parseInt(props.list.playCount))
     })
+    let Play
+    if(props.list){
+      Play = async (id) => {
+        await axios.get(api + "/playlist/detail?id=" + id).then(async (res) => {
+          state.songListIndex = 0
+          state.songList = res.playlist.tracks;
+          state.ids = res.playlist.tracks[state.songListIndex].id;
+          await dispatch("getAudios", res.playlist.tracks[state.songListIndex].id);
+          await dispatch("getPlayText", res.playlist.tracks[state.songListIndex].id);
+          commit("isSetPlay");
+          const ao = document.querySelector("audio");
+          if (ao.played) {
+            ao.load();
+            ao.play();
+          } else {
+            ao.play();
+          }
+        });
+      }
+    }
     return{
-      count
+      count,Play
     }
   }
 };

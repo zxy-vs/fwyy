@@ -21,7 +21,8 @@ export default createStore({
     picUrl: '',//播放框的小图片
     songList: [],//播放列表
     songListIndex: 0,//播放列表的索引
-    isLoop:0,//播放下一首的类型 0，1，2
+    isLoop:0,//播放下一首的类型 0，1，2,
+    title:''//title标题
   },
   getters: {
     Transtime(state) {
@@ -71,7 +72,8 @@ export default createStore({
         commit('setPicUrl',res.data.songs[0].al.picUrl)
         commit('setTime',res.data.songs[0].dt)
        });
-    }
+    },
+    // async getListPlay({commit},)
   },
   modules: {},
   plugins: [createPersistedState()],

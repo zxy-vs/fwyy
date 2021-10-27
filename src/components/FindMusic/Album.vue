@@ -34,10 +34,17 @@ import AlbumCom from "./Album/AlbumCom.vue";
 import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { api } from "../../untils/baseProxy";
+import { useStore } from 'vuex';
 export default {
   components: { AlbumCom },
   setup() {
-    document.title = "新碟上架 - 网易云音乐"
+    const {state} = useStore()
+    const title = (path) => {
+      if (path == "/discover/album") {
+        document.title = "新碟上架 - 网易云音乐";
+        state.title = "新碟上架 - 网易云音乐";
+      }
+    };
     const Route = useRoute();
     const lbt = reactive({
       lbtList: [],
@@ -72,6 +79,7 @@ export default {
     ]);
     watchEffect(() => {
       lbt.getquanList(lbt.offset, Route.query.area);
+      title(Route.path)
     });
     return {
       ...toRefs(lbt),

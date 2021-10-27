@@ -6,13 +6,19 @@
         <dt>
           <div class="FromImg">
             <img v-lazy="`${item.coverImgUrl}?param=100y100`" alt="" />
-            <router-link :to="'/discover/toplist?id=' + item.id "></router-link>
+            <router-link :to="'/discover/toplist?id=' + item.id"></router-link>
           </div>
           <div class="FromLink">
-            <router-link :to="'/discover/toplist?id=' + item.id" class="FromName"
+            <router-link
+              :to="'/discover/toplist?id=' + item.id"
+              class="FromName"
               ><h3>{{ item.name }}</h3></router-link
             >
-            <router-link to="#" class="FromPlay play"></router-link>
+            <a
+              href="javascript:;"
+              class="FromPlay play"
+              @click="Play(item.id)"
+            ></a>
             <router-link to="#" class="FromPlay bgp"></router-link>
           </div>
         </dt>
@@ -31,9 +37,9 @@
               </router-link>
 
               <div class="FromY">
-                <router-link to="#" class="FromYPlay"></router-link>
-                <router-link to="#" class="FromYPlay Add"></router-link>
-                <router-link to="#" class="FromYPlay bgp"></router-link>
+                <a href="javascript:;" class="FromYPlay" @click="PLay(item.id)"></a>
+                <a href="javascript:;" class="FromYPlay Add"></a>
+                <a href="javascript:;" class="FromYPlay bgp"></a>
               </div>
             </li>
           </ol>
@@ -45,26 +51,63 @@
 
 <script>
 import { reactive, ref, toRefs } from "@vue/reactivity";
-import { api } from '../../../untils/baseProxy';
+import { api } from "../../../untils/baseProxy";
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const {state,commit,dispatch} = useStore()
     const headList = ref({
       title: "榜单",
       titleUrl: "/discover/toplist",
       moreUrl: "/discover/toplist",
     });
-
+    let Play = async (id) => {
+      await axios.get(api+"/playlist/detail?id=" + id).then(async (res) => {
+        state.songListIndex = 0;
+        state.songList = res.privileges;
+        state.ids = res.privileges[state.songListIndex].id;
+        await dispatch("getAudios", res.privileges[state.songListIndex].id);
+        await dispatch("getPlayText", res.privileges[state.songListIndex].id);
+        commit("isSetPlay");
+        const ao = document.querySelector("audio");
+        if (ao.played) {
+          ao.load();
+          ao.play();
+        } else {
+          ao.play();
+        }
+      });
+    };
+    const ao = document.querySelector('audio')
+     const PLay = async (id) => {
+      state.ids = id;
+      await dispatch("getAudios", state.ids);
+      await dispatch("getPlayText", state.ids);
+      clearInterval(state.tst);
+      const pg = document.querySelector(".c_cur");
+      state.tst = setInterval(() => {
+        pg.style.width =
+          (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+      }, 1000 / 60);
+      state.isPlay = true;
+      if (ao.played) {
+        ao.load();
+        ao.play();
+      } else {
+        ao.play();
+      }
+    };
     const content = reactive({
       contentList: [],
       cList: [],
       async getContentList() {
-        await axios.get(api+"/toplist").then((res) => {
+        await axios.get(api + "/toplist").then((res) => {
           this.contentList = res.list;
           this.contentList.length = 3;
         });
         for (let i = 0; i < this.contentList.length; i++) {
           await axios
-            .get(api+"/playlist/detail?id=" + this.contentList[i].id)
+            .get(api + "/playlist/detail?id=" + this.contentList[i].id)
             .then((res) => {
               this.cList[i] = res.playlist.tracks;
               this.cList[i].length = 10;
@@ -76,6 +119,7 @@ export default {
     return {
       headList,
       ...toRefs(content),
+      Play,PLay
     };
   },
 };
