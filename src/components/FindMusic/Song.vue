@@ -48,6 +48,7 @@ import { useStore } from "vuex";
 import { watchEffect } from "@vue/runtime-core";
 import { api } from "../../untils/baseProxy";
 import SongRm from "./song/songRm.vue";
+import {unique} from '../../untils/Set'
 export default {
   components: { GlobalComBtn, SongRm },
   setup() {
@@ -55,6 +56,9 @@ export default {
     const { state, commit, dispatch } = useStore();
     const getid = async (id) => {
       state.ids = id;
+      await state.songList.push(stateL.quan);
+      state.songList = unique(state.songList);
+      state.songListIndex = -1;
       await dispatch("getAudios", id);
       commit("setPlayText", stateL.quan);
       state.picUrl = stateL.quan.al.picUrl;
@@ -83,13 +87,13 @@ export default {
           let str = this.quan.name + "- ";
           for (let i = 0; i < this.ar.length; i++) {
             if (i == this.ar.length - 1) {
-              str += this.ar[i].name+ "- 单曲 - 网易云音乐";
+              str += this.ar[i].name + "- 单曲 - 网易云音乐";
             } else {
               str += this.ar[i].name + "/";
             }
           }
-          document.title = str
-          state.title = str
+          document.title = str;
+          state.title = str;
         });
         await axios.get(api + "/lyric?id=" + id).then((res) => {
           if (res.lrc) {

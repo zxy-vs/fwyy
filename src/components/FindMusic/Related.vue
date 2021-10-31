@@ -79,7 +79,7 @@ export default {
       subscribedCount: 0,
       async getquan(id) {
         await axios.get(api + "/playlist/detail?id=" + id).then((res) => {
-          this.quan = res.playlist;
+         this.quan = res.playlist;
           this.creator = res.playlist.creator;
           this.data = res.playlist.tracks;
           this.birthday = Time(this.creator.birthday);
@@ -89,7 +89,7 @@ export default {
         });
       },
       async Played() {
-        state.songList = stateL.quan.trackIds;
+        state.songList = stateL.quan.tracks;
         state.songListIndex = 0;
         state.ids = state.songList[state.songListIndex].id;
         await dispatch("getAudios", state.songList[state.songListIndex].id);

@@ -25,7 +25,7 @@
           <span class="num">{{ index + 1 }}</span>
           <span
             :class="['ply', item.id == state.ids ? 'ccolor' : '']"
-            @click="Played(index)"
+            @click="Played(item.id,index)"
           ></span>
         </div>
       </td>
@@ -74,13 +74,17 @@
 <script>
 import { useStore } from "vuex";
 import { Times } from "../../../untils/TimeTran";
+import {unique} from '../../../untils/Set'
 export default {
   props: ["quan", "data"],
   setup(props) {
     const { state, dispatch } = useStore();
     const ao = document.querySelector("audio");
-    const Played = async (index) => {
-      state.ids = props.data[index].id;
+    const Played = async (id,index) => {
+      state.ids = id;
+      await state.songList.push(props.data[index]);
+      state.songList = unique(state.songList);
+      state.songListIndex = -1;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

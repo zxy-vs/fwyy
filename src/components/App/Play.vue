@@ -90,11 +90,31 @@
         <a href="javascript:;" class="mode" title="循环" ref="mode"></a>
         <span class="f_add">
           <span class="tip">已添加到播放列表</span>
-          <router-link to="#" title="播放列表">{{
+          <a href="javascript:;" title="播放列表" ref="pls">{{
             songList.length
-          }}</router-link>
+          }}</a>
         </span>
         <div class="mode_show" ref="ms">随机</div>
+      </div>
+    </div>
+    <div class="f_list" v-show="isPlays" ref="fls">
+      <div class="listhd">
+        <div class="listhdc">
+          <h4>
+            播放列表(<span>{{ songList.length }}</span
+            >)
+          </h4>
+          <a href="javascript:;" class="addall">
+            <i class="add"></i>收藏全部
+          </a>
+          <span class="line"></span>
+          <a href="javascript:;" class="clear"> <i class="del"></i>清除 </a>
+          <p>{{ playText.name }}</p>
+          <span class="close" @click="isPlays = false">关闭</span>
+        </div>
+      </div>
+      <div class="listbd">
+        <listbd />
       </div>
     </div>
   </div>
@@ -104,8 +124,10 @@
 import { ref, toRefs } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { Times } from "../../untils/TimeTran";
-import { onBeforeUnmount, onMounted } from "@vue/runtime-core";
+import { onMounted } from "@vue/runtime-core";
+import listbd from "./Play/listbd.vue";
 export default {
+  components: { listbd },
   setup(props, { emit }) {
     const { state, commit, dispatch } = useStore();
     state.isPlay = false;
@@ -162,6 +184,8 @@ export default {
       }
     };
     const isTT = ref(false);
+    const isPlays = ref(false);
+    const pls = ref(null);
     const cur = ref(null);
     const fp = ref(null);
     const mode = ref(null);
@@ -170,6 +194,7 @@ export default {
     const fc = ref(null);
     const fv = ref(null);
     const ms = ref(null);
+    const fls = ref(null);
     const modeList = ["mode", "mode1", "mode2"];
     onMounted(() => {
       let bf = btn.value.parentNode;
@@ -272,13 +297,62 @@ export default {
           document.documentElement.onclick = null;
         };
         bf.parentNode.addEventListener("mouseleave", function () {
-          document.documentElement.onclick = function () {
-            isTT.value = false;
-            document.documentElement.onclick = null;
-          };
+          if (isPlays.value == false) {
+            document.documentElement.onclick = function () {
+              isTT.value = false;
+              document.documentElement.onclick = null;
+            };
+          }
         });
         document.documentElement.onclick = function () {
+          isPlays.value = false;
           isTT.value = false;
+        };
+      };
+      pls.value.onclick = function (e) {
+        e.stopPropagation();
+        isPlays.value = !isPlays.value;
+        fls.value.onmouseenter = function () {
+          isPlays.value = true;
+          document.documentElement.onclick = null;
+        };
+        fls.value.onmouseleave = function () {
+          fls.value.parentNode.onmouseover = function () {
+            isPlays.value = true;
+            document.documentElement.onclick = null;
+          };
+          fls.value.parentNode.onmouseleave = function () {
+            document.documentElement.onclick = null;
+            document.documentElement.onclick = function () {
+              isTT.value = false;
+              isPlays.value = false;
+              document.documentElement.onclick = null;
+              fls.value.parentNode.onmouseleave = null;
+            };
+            fls.value.parentNode.onmouseover = null;
+          };
+          document.documentElement.onclick = function () {
+            isTT.value = false;
+            isPlays.value = false;
+          };
+        };
+        fls.value.parentNode.onmouseover = function () {
+          isPlays.value = true;
+          document.documentElement.onclick = null;
+        };
+        fls.value.parentNode.onmouseleave = function () {
+          document.documentElement.onclick = null;
+          document.documentElement.onclick = function () {
+            isTT.value = false;
+            isPlays.value = false;
+            document.documentElement.onclick = null;
+            fls.value.parentNode.onmouseleave = null;
+          };
+          fls.value.parentNode.onmouseover = null;
+        };
+        document.documentElement.onclick = function () {
+          isTT.value = false;
+          isPlays.value = false;
         };
       };
     });
@@ -297,6 +371,9 @@ export default {
       fc,
       fv,
       ms,
+      isPlays,
+      pls,
+      fls,
     };
   },
 };
@@ -719,6 +796,128 @@ export default {
         color: #fff;
         text-align: center;
       }
+    }
+  }
+  .f_list {
+    z-index: -1;
+    position: absolute;
+    left: 50%;
+    bottom: 47px;
+    width: 986px;
+    height: 301px;
+    transform: translateX(-50%);
+    .listhd {
+      background-position: 0 0;
+      height: 41px;
+      padding: 0 5px;
+      background: url("../../../public/static/playlist_bg.png") no-repeat;
+      .listhdc {
+        position: relative;
+        height: 40px;
+        h4 {
+          position: absolute;
+          left: 25px;
+          top: 0;
+          height: 39px;
+          line-height: 39px;
+          font-size: 14px;
+          font-weight: bold;
+          font-family: Arial, Helvetica, sans-serif;
+          color: #e2e2e2;
+        }
+        .addall {
+          position: absolute;
+          top: 12px;
+          left: 398px;
+          height: 15px;
+          line-height: 15px;
+          .add {
+            float: left;
+            height: 16px;
+            width: 16px;
+            line-height: 15px;
+            background: url("../../../public/static/playlist.png") no-repeat;
+            background-position: -24px 0;
+            margin: 1px 6px 0 0;
+          }
+        }
+        .line {
+          position: absolute;
+          top: 13px;
+          left: 477px;
+          height: 15px;
+          border-left: 1px solid #000;
+          border-right: 1px solid #2c2c2c;
+        }
+        .clear {
+          position: absolute;
+          left: 490px;
+          top: 12px;
+          height: 15px;
+          line-height: 15px;
+          .del {
+            float: left;
+            height: 16px;
+            width: 13px;
+            line-height: 15px;
+            background: url("../../../public/static/playlist.png") no-repeat;
+            background-position: -51px 0;
+            margin: 1px 6px 0 0;
+          }
+        }
+        a {
+          color: #ccc;
+        }
+        a:hover {
+          text-decoration: underline;
+          .add,
+          .del {
+            background-position-y: -20px;
+          }
+        }
+        p {
+          margin: 0;
+          position: absolute;
+          left: 595px;
+          top: 0;
+          width: 346px;
+          text-align: center;
+          height: 39px;
+          line-height: 39px;
+          color: #fff;
+          font-size: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .close {
+          position: absolute;
+          top: 6px;
+          right: 8px;
+          width: 30px;
+          height: 30px;
+          overflow: hidden;
+          text-indent: -999px;
+          background: url("../../../public/static/playlist.png") no-repeat;
+          background-position: -195px 9px;
+          cursor: pointer;
+        }
+        .close:hover {
+          background-position-y: -21px;
+        }
+      }
+    }
+    .listbd {
+      position: absolute;
+      left: 0;
+      top: 41px;
+      width: 986px;
+      height: 260px;
+      padding: 0 5px;
+      overflow: hidden;
+      background: url("../../../public/static/playlist_bg.png") no-repeat;
+      background-position: -1014px 0;
+      background-repeat: repeat-y;
     }
   }
 }

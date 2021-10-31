@@ -38,7 +38,7 @@
         <td width="94" style="width: 94px">
           <div class="hd">
             <span class="num">{{ index + 1 }}</span>
-            <span :class="['ply',item.id==state.ids?'ccolor':'']" @click="Played(index)"></span>
+            <span :class="['ply',item.id==state.ids?'ccolor':'']" @click="Played(item.id,index)"></span>
           </div>
         </td>
         <td width="309" style="width: 309px">
@@ -74,6 +74,7 @@
 import { ref} from "@vue/reactivity";
 import { Times } from "../../../untils/TimeTran";
 import { useStore } from "vuex";
+import { unique } from '../../../untils/Set';
 export default {
   props: ["RList"],
   setup(props) {
@@ -100,9 +101,12 @@ export default {
         ao.play();
       }
     };
-     const Played = async (index) => {
-      console.log(props.RList[index].id);
-      state.ids = props.RList[index].id;
+     const Played = async (id,index) => {
+      // console.log(props.RList[index].id);
+      state.ids = id;
+      await state.songList.push(props.RList[index]);
+      state.songList = unique(state.songList);
+      state.songListIndex = -1;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

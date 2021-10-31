@@ -70,7 +70,7 @@
                   <span class="num">{{ index + 1 }}</span>
                   <span
                     :class="['ply', item.id == state.ids ? 'ccolor' : '']"
-                    @click="Played(index)"
+                    @click="Played(item.id,index)"
                   ></span>
                 </div>
               </td>
@@ -139,6 +139,7 @@ import { Time } from "../../../untils/TimeTrans";
 import { Times } from "../../../untils/TimeTran";
 import { useStore } from "vuex";
 import { api } from "../../../untils/baseProxy";
+import { unique } from '../../../untils/Set';
 export default {
   setup() {
     const { state, commit, dispatch } = useStore();
@@ -170,8 +171,14 @@ export default {
       return text.replace(space, "<br>");
     };
     const ao = document.querySelector("audio");
-    const Played = async (index) => {
-      state.ids = PGM.SongList[index].id;
+    const Played = async (id,index) => {
+      state.ids = id;
+      let hl =state.songList.length
+      await state.songList.push(PGM.SongList[index]);
+      state.songList = unique(state.songList);
+      if(hl==state.songList.length){
+      state.songListIndex = -1;
+      }
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

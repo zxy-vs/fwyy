@@ -32,20 +32,19 @@
         ></component>
       </keep-alive>
     </div>
-    <div class="A_r">
+    <!-- <div class="A_r" v-if="AImg.length==6">
       <h3>
         <span>热门歌手</span>
       </h3>
-      <ul class="A_img">
-        <li v-for="item,index of AImg" :key="index">
-          <router-link :to="'/artist?id='+item.id">
-            <img
-              :src="`${item.picUrl}?param=50y50`"
-              alt=""
-            />
+      <ul class="A_img" v-if="AImg.length">
+        <li v-for="(item, index) of AImg" :key="index">
+          <router-link :to="'/artist?id=' + item.id">
+            <img :src="`${item.picUrl}?param=50y50`" alt="" />
           </router-link>
           <p>
-            <router-link :to="'/artist?id='+item.id">{{item.name}}</router-link>
+            <router-link :to="'/artist?id=' + item.id">{{
+              item.name
+            }}</router-link>
           </p>
         </li>
       </ul>
@@ -54,7 +53,7 @@
       </h3>
       <ul class="Rm_load"></ul>
       <p class="Rm_loads">同步歌单，随时畅听320k好音乐</p>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -66,12 +65,12 @@ import Y from "./Artisted/Y.vue";
 import { useRoute } from "vue-router";
 import { watchEffect } from "@vue/runtime-core";
 import { api } from "../../untils/baseProxy";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 export default {
   components: { R, S, X, Y },
   setup() {
     const Route = useRoute();
-    const {state} = useStore()
+    const { state } = useStore();
     const nav = reactive({
       name: ["热门作品", "所有专辑", "相关MV", "艺人介绍"],
       is: ["R", "S", "X", "Y"],
@@ -85,17 +84,21 @@ export default {
       Mv: [],
       AImg: [],
       async getImg(id) {
-        await axios.get(api + "/simi/artist?id=" + id).then((res) => {
-          console.log(res);
-          this.AImg = res.artists
-          this.AImg.length =6
-        });
+        try {
+          await axios.get(api + "/simi/artist?id=" + id).then((res) => {
+            console.log(res);
+            this.AImg = res.artists;
+            this.AImg.length = 6;
+          });
+        } catch (e) {
+          console.log(e);
+        }
       },
       async getGSList(id) {
         await axios.get(api + "/artists?id=" + id).then((res) => {
           this.GSList = res.artist;
-          document.title = res.artist.name+' - 歌手 - 网易云音乐'
-          state.title = res.artist.name+' - 歌手 - 网易云音乐'
+          document.title = res.artist.name + " - 歌手 - 网易云音乐";
+          state.title = res.artist.name + " - 歌手 - 网易云音乐";
           this.RList = res.hotSongs;
         });
       },

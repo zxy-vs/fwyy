@@ -151,6 +151,7 @@ import { Time } from "../../untils/TimeTrans";
 import { Times } from "../../untils/TimeTran";
 import { useStore } from "vuex";
 import { api } from '../../untils/baseProxy';
+import { unique } from '../../untils/Set';
 export default {
   components: { GlobalComBtn },
   setup() {
@@ -210,8 +211,10 @@ export default {
       }
     };
     const Played = async (index) => {
-      console.log(ctt.TpList[index].id);
       state.ids = ctt.TpList[index].id;
+       await state.songList.push(ctt.TpList[index]);
+      state.songList = unique(state.songList);
+      state.songListIndex = -1;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);
