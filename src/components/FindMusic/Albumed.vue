@@ -97,7 +97,7 @@ export default {
       async Played() {
         state.songList = stateL.data;
         state.songListIndex = 0;
-        state.ids = state.songList[state.songListIndex].id;
+        state.ids = state.songList[state.songListIndex].id;   
         await dispatch("getAudios", state.songList[state.songListIndex].id);
         await dispatch("getPlayText", state.songList[state.songListIndex].id);
         commit("isSetPlay");

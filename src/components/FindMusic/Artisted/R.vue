@@ -102,11 +102,11 @@ export default {
       }
     };
      const Played = async (id,index) => {
-      // console.log(props.RList[index].id);
       state.ids = id;
       await state.songList.push(props.RList[index]);
       state.songList = unique(state.songList);
-      state.songListIndex = -1;
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

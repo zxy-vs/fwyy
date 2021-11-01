@@ -58,7 +58,8 @@ export default {
       state.ids = id;
       await state.songList.push(stateL.quan);
       state.songList = unique(state.songList);
-      state.songListIndex = -1;
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", id);
       commit("setPlayText", stateL.quan);
       state.picUrl = stateL.quan.al.picUrl;

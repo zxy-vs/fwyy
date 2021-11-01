@@ -5,7 +5,7 @@
     class="imgbg"
   />
   <div class="bd_list">
-    <ul class="f_cb" ref="ul">
+    <ul class="f_cbss" ref="ul">
       <li
         :class="state.ids == item.id ? 'select' : ''"
         v-for="(item, index) of state.songList"
@@ -68,7 +68,6 @@ export default {
     const { state, dispatch } = useStore();
     const PLay = async (id, index) => {
       state.ids = id;
-      console.log(1);
       state.songListIndex = index;
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
@@ -196,7 +195,7 @@ export default {
   height: 260px;
   width: 553px;
   overflow: hidden;
-  .f_cb {
+  .f_cbss {
     position: absolute;
     color: #ccc;
     overflow: hidden;

@@ -173,12 +173,10 @@ export default {
     const ao = document.querySelector("audio");
     const Played = async (id,index) => {
       state.ids = id;
-      let hl =state.songList.length
       await state.songList.push(PGM.SongList[index]);
       state.songList = unique(state.songList);
-      if(hl==state.songList.length){
-      state.songListIndex = -1;
-      }
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

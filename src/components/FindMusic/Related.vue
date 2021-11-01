@@ -79,13 +79,13 @@ export default {
       subscribedCount: 0,
       async getquan(id) {
         await axios.get(api + "/playlist/detail?id=" + id).then((res) => {
-         this.quan = res.playlist;
+          this.quan = res.playlist;
           this.creator = res.playlist.creator;
           this.data = res.playlist.tracks;
           this.birthday = Time(this.creator.birthday);
           this.subscribedCount = res.playlist.subscribedCount;
-          document.title = this.quan.name+' - 歌单 - 网易云音乐';
-          state.title = this.quan.name+' - 歌单 - 网易云音乐'
+          document.title = this.quan.name + " - 歌单 - 网易云音乐";
+          state.title = this.quan.name + " - 歌单 - 网易云音乐";
         });
       },
       async Played() {

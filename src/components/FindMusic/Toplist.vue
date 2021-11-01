@@ -150,8 +150,8 @@ import GlobalComBtn from "../../GlobalCom/GlobalComBtn.vue";
 import { Time } from "../../untils/TimeTrans";
 import { Times } from "../../untils/TimeTran";
 import { useStore } from "vuex";
-import { api } from '../../untils/baseProxy';
-import { unique } from '../../untils/Set';
+import { api } from "../../untils/baseProxy";
+import { unique } from "../../untils/Set";
 export default {
   components: { GlobalComBtn },
   setup() {
@@ -168,7 +168,7 @@ export default {
         this.indexs = id;
       },
       async getlList() {
-        await axios.get(api+"/toplist").then((res) => {
+        await axios.get(api + "/toplist").then((res) => {
           this.lList = res.list;
         });
       },
@@ -180,12 +180,12 @@ export default {
       subscribedCount: [],
       info: [],
       async getctt(id = "19723756") {
-        await axios.get(api+"/playlist/detail?id=" + id).then((res) => {
+        await axios.get(api + "/playlist/detail?id=" + id).then((res) => {
           this.quan = res.playlist;
           this.subscribedCount = res.playlist.subscribedCount;
           this.TpList = res.playlist.tracks;
-          document.title = this.quan.name+'- 排行榜 - 网易云音乐'
-          state.title = this.quan.name+'- 排行榜 - 网易云音乐'
+          document.title = this.quan.name + "- 排行榜 - 网易云音乐";
+          state.title = this.quan.name + "- 排行榜 - 网易云音乐";
         });
       },
     });
@@ -212,9 +212,10 @@ export default {
     };
     const Played = async (index) => {
       state.ids = ctt.TpList[index].id;
-       await state.songList.push(ctt.TpList[index]);
+      await state.songList.push(ctt.TpList[index]);
       state.songList = unique(state.songList);
-      state.songListIndex = -1;
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

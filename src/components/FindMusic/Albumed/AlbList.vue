@@ -77,7 +77,8 @@ export default {
       console.log(props.data[index]);
       await state.songList.push(props.data[index]);
       state.songList = unique(state.songList);
-      state.songListIndex = -1;
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

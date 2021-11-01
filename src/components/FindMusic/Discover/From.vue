@@ -26,18 +26,18 @@
           <ol class="FromOl" v-if="cList.length">
             <li
               class="FromLi"
-              v-for="(item, index) of cList[index]"
-              :key="index"
+              v-for="(items, indexs) of cList[index]"
+              :key="indexs"
             >
-              <span :style="index <= 3 ? 'color:#c10d0c' : ''">{{
-                index + 1
+              <span :style="indexs <= 3 ? 'color:#c10d0c' : ''">{{
+                indexs + 1
               }}</span>
-              <router-link :to="'/song?id=' + item.id"
-                >{{ item.name }}
+              <router-link :to="'/song?id=' + items.id"
+                >{{ items.name }}
               </router-link>
 
               <div class="FromY">
-                <a href="javascript:;" class="FromYPlay" @click="PLay(item.id)"></a>
+                <a href="javascript:;" class="FromYPlay" @click="PLay(items.id,index,indexs)"></a>
                 <a href="javascript:;" class="FromYPlay Add"></a>
                 <a href="javascript:;" class="FromYPlay bgp"></a>
               </div>
@@ -53,6 +53,7 @@
 import { reactive, ref, toRefs } from "@vue/reactivity";
 import { api } from "../../../untils/baseProxy";
 import { useStore } from 'vuex';
+import { unique } from '../../../untils/Set';
 export default {
   setup() {
     const {state,commit,dispatch} = useStore()
@@ -79,8 +80,12 @@ export default {
       });
     };
     const ao = document.querySelector('audio')
-     const PLay = async (id) => {
+     const PLay = async (id,index,indexs) => {
       state.ids = id;
+       await state.songList.push(content.cList[index][indexs]);
+      state.songList = unique(state.songList);
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);

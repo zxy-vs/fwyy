@@ -63,6 +63,7 @@ import { watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { Times } from "../../untils/TimeTran";
 import { api } from '../../untils/baseProxy';
+import { unique } from '../../untils/Set';
 export default {
   setup() {
     const { state,dispatch } = useStore();
@@ -80,6 +81,10 @@ export default {
     const ao = document.querySelector("audio");
     const Played = async (index) => {
       state.ids = list.lists[index].id;
+      await state.songList.push(list.lists[index]);
+      state.songList = unique(state.songList);
+      const uls = document.querySelector('.f_cbss')
+      uls.querySelector('.select').click()
       await dispatch("getAudios", state.ids);
       await dispatch("getPlayText", state.ids);
       clearInterval(state.tst);
