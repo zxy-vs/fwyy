@@ -1,9 +1,5 @@
 <template>
-  <img
-    src="https://p1.music.126.net/PZIMVQF_9SadsB-CWkJUdQ==/109951165597071582.jpg"
-    alt=""
-    class="imgbg"
-  />
+  <img :src="state.picUrl" alt="" class="imgbg" />
   <div class="bd_list">
     <ul class="f_cbss" ref="ul">
       <li
@@ -56,6 +52,29 @@
   <div class="bline" ref="btn">
     <span :style="'height:' + hh + 'px;'"></span>
   </div>
+  <div class="msk2"></div>
+  <div class="listlyric">
+    <div class="lsit_lyric" ref="pp">
+      <template v-for="(item, index) of state.songTxt" :key="index">
+        <p
+          v-if="index % 2 && index != 0"
+          :title="state.songTxt[index - 1]"
+          :class="[
+            (NT(state.songTxt[index - 1]) <= state.currentTime &&
+              NT(state.songTxt[index + 1]) > state.currentTime) ||
+            state.songTxt.length - 2 == index
+              ? 'z_sel'
+              : '',
+          ]"
+        >
+          {{ item }}
+        </p>
+      </template>
+    </div>
+  </div>
+  <div class="bline bline1" ref="btn1">
+    <span :style="'height:' + hh1 + 'px;'"></span>
+  </div>
 </template>
 
 <script>
@@ -63,43 +82,18 @@ import { ref } from "@vue/reactivity";
 import { useStore } from "vuex";
 import { Times } from "../../../untils/TimeTran";
 import { onBeforeUnmount, onMounted } from "@vue/runtime-core";
+import { NT } from "../../../untils/TimeN";
 export default {
   setup() {
     const { state, dispatch } = useStore();
-    const PLay = async (id, index) => {
-      state.ids = id;
-      state.songListIndex = index;
-      await dispatch("getAudios", state.ids);
-      await dispatch("getPlayText", state.ids);
-      clearInterval(state.tst);
-      const pg = document.querySelector(".c_cur");
-      state.tst = setInterval(() => {
-        pg.style.width =
-          (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
-      }, 1000 / 60);
-      state.isPlay = true;
-      const ao = document.querySelector("audio");
-      if (ao.played) {
-        ao.load();
-        ao.play();
-      } else {
-        ao.play();
-      }
-    };
     const ul = ref(null);
     const btn = ref(null);
+    const btn1 = ref(null);
     const hh = ref();
+    const hh1 = ref();
+    const pp = ref(null);
     let btnn = ref(null);
-    const songText = async (id) => {
-      await axios.get(api + "/lyric?id=" + id).then((res) => {
-        if (res.lrc) {
-          this.lyric = res.lrc.lyric;
-          this.lyric = this.lyric.replace(/\n/g, "<br>");
-        } else {
-          this.lyric = "此音乐为纯音乐，无歌词";
-        }
-      });
-    };
+    let btnn1 = ref(null);
     onMounted(async () => {
       btnn = await setInterval(() => {
         hh.value =
@@ -161,9 +155,113 @@ export default {
           }
         };
       };
+      btnn1 = await setInterval(() => {
+        hh1.value =
+          (btn1.value.parentNode.offsetHeight / pp.value.offsetHeight) *
+          btn1.value.parentNode.offsetHeight;
+      }, 1000 / 60);
+      btn1.value.onmousedown = function (e) {
+        e.preventDefault();
+        let y =
+          e.clientY -
+          (document.documentElement.clientHeight -
+            53 +
+            document.querySelector(".f_list").offsetTop) -
+          btn1.value.parentNode.offsetTop -
+          btn1.value.children[0].offsetTop;
+        document.documentElement.onmousemove = function (e) {
+          let maxTop = btn.value.parentNode.offsetHeight - hh1.value,
+            minTop = 0,
+            top =
+              e.clientY -
+              (document.documentElement.clientHeight -
+                53 +
+                document.querySelector(".f_list").offsetTop) -
+              btn1.value.parentNode.offsetTop -
+              y;
+          top = Math.max(minTop, top);
+          top = Math.min(maxTop, top);
+          btn1.value.children[0].style.top = top + "px";
+          pp.value.style.top =
+            -top /
+              (btn1.value.parentNode.offsetHeight / pp.value.offsetHeight) +
+            "px";
+        };
+        document.documentElement.onmouseup = function () {
+          document.documentElement.onmousemove = null;
+          document.documentElement.onmouseup = null;
+        };
+      };
+      pp.value.parentNode.onmouseenter = function () {
+        pp.value.onmousewheel = function (e) {
+          if (e.wheelDelta < 0) {
+            if (
+              pp.value.offsetHeight - pp.value.parentNode.offsetHeight >
+              -pp.value.offsetTop
+            ) {
+              pp.value.style.top = pp.value.offsetTop - 10 + "px";
+              btn1.value.children[0].style.top =
+                -pp.value.offsetTop *
+                  (btn1.value.parentNode.offsetHeight / pp.value.offsetHeight) +
+                "px";
+            }
+          } else {
+            if (pp.value.offsetTop < 0) {
+              pp.value.style.top = pp.value.offsetTop + 10 + "px";
+              btn1.value.children[0].style.top =
+                -pp.value.offsetTop *
+                  (btn1.value.parentNode.offsetHeight / pp.value.offsetHeight) +
+                "px";
+            }
+          }
+        };
+      };
     });
+    const PLay = async (id, index) => {
+      state.ids = id;
+      state.songListIndex = index;
+      await dispatch("getAudios", state.ids);
+      await dispatch("getPlayText", state.ids);
+      clearInterval(state.tst);
+      const pg = document.querySelector(".c_cur");
+      state.tst = setInterval(() => {
+        pg.style.width =
+          (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+      }, 1000 / 60);
+      state.isPlay = true;
+      const ao = document.querySelector("audio");
+      if (ao.played) {
+        ao.load();
+        ao.play();
+      } else {
+        ao.play();
+      }
+      let poo = null;
+      ao.onplay = function () {
+        poo = setInterval(() => {
+          if (pp.value.querySelector(".z_sel")) {
+            btn1.value.children[0].style.top =
+              (pp.value.querySelector(".z_sel").offsetTop /
+                pp.value.offsetHeight) *
+                (btn1.value.offsetHeight - hh1.value) +
+              "px";
+            if (pp.value.querySelector(".z_sel").offsetTop >= 128) {
+              pp.value.style.top =
+                128 - pp.value.querySelector(".z_sel").offsetTop + "px";
+            }
+          }
+        }, 1000 / 60);
+      };
+      ao.onpause = function () {
+        clearInterval(poo);
+        document.title = state.title;
+      };
+      document.querySelector("audio").addEventListener("play", function () {});
+    };
+
     onBeforeUnmount(() => {
       clearInterval(btnn);
+      clearInterval(btnn1);
     });
     return {
       state,
@@ -171,7 +269,11 @@ export default {
       PLay,
       ul,
       btn,
+      btn1,
       hh,
+      hh1,
+      pp,
+      NT,
     };
   },
 };
@@ -354,5 +456,48 @@ export default {
     border: 1px solid #a6a6a6;
     opacity: 0.8;
   }
+}
+.msk2 {
+  position: absolute;
+  left: 560px;
+  top: 0;
+  z-index: 3;
+  width: 420px;
+  height: 250px;
+  background: #121212;
+  opacity: 0.01;
+}
+.listlyric {
+  position: absolute;
+  right: 40px;
+  bottom: 0;
+  z-index: 4;
+  margin: 21px 0 20px 0;
+  height: 219px;
+  width: 354px;
+  overflow: hidden;
+  .lsit_lyric {
+    position: absolute;
+    width: 100%;
+    p {
+      margin: 0;
+      color: #989898;
+      word-wrap: break-word;
+      text-align: center;
+      line-height: 32px;
+      height: auto !important;
+      min-height: 32px;
+      transition: color 0.7s linear;
+    }
+    .z_sel {
+      color: #fff;
+      font-size: 14px;
+    }
+  }
+}
+
+.bline1 {
+  left: auto;
+  right: 2px;
 }
 </style>

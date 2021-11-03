@@ -30,7 +30,9 @@
           <div class="t_btn">
             <global-com-btn :quan="quan" :info="info" @getids="getid" />
           </div>
-          <div class="t_song" v-html="lyric"></div>
+          <template v-for="(item, index) of state.songTxt" :key="index">
+        <p class="center" v-if="index % 2&&index!=0" :title="state.songTxt[index-1]">{{ item }}</p>
+      </template>
         </div>
       </div>
     </div>
@@ -113,6 +115,7 @@ export default {
     });
     return {
       ...toRefs(stateL),
+      state,
       getid,
     };
   },
@@ -213,5 +216,8 @@ export default {
     border: 1px solid #d3d3d3;
     border-width: 0 0 0 1px;
   }
+}
+.center{
+  text-align: center;
 }
 </style>

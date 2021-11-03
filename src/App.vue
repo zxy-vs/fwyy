@@ -6,7 +6,7 @@
     </main>
     <div class="fixed_play" ref="keys">
       <Play
-        v-show="Route.path != '/mv'&&Route.path != '/video'"
+        v-show="Route.path != '/mv' && Route.path != '/video'"
         @pauseAo="PauseAo"
         @playAo="PlayAo"
         @jump="jump"
@@ -42,19 +42,37 @@ export default {
     const jump = () => {
       ao.value.currentTime = state.currentTime;
     };
+
     const randoms = () => {
       let index = Math.floor(Math.random() * state.songList.length);
       state.songListIndex = index;
       storeFu();
     };
     onMounted(() => {
+      let poo1 = null;
+      const ulll = document.querySelector(".f_cbss");
+      ao.value.addEventListener("ended", function () {
+        poo1 = setInterval(() => {
+          if (ulll.querySelector(".select")) {
+            document.querySelector(".bline").children[0].style.top =
+              (ulll.querySelector(".select").offsetTop / ulll.offsetHeight) *
+                (document.querySelector(".bline").offsetHeight -
+                  document.querySelector(".bline").children[0].offsetHeight) +
+              "px";
+          }
+          if (ulll.querySelector(".select").offsetTop >= 230) {
+            ulll.style.top =
+              230 - ulll.querySelector(".select").offsetTop + "px";
+          }
+        }, 1000 / 60);
+      });
       ao.value.ontimeupdate = function () {
         state.currentTime = this.currentTime;
         this.volume = state.isVolume;
-        document.title = '▶  '+state.playText.name
-        };
+        document.title = "▶  " + state.playText.name;
+      };
       ao.value.onpause = function () {
-       document.title = state.title
+        document.title = state.title;
       };
       keys.value.onmouseenter = me;
       keys.value.onmouseleave = ml;
