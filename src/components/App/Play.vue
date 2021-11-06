@@ -90,7 +90,7 @@
         <a href="javascript:;" class="mode" title="循环" ref="mode"></a>
         <span class="f_add">
           <span class="tip">已添加到播放列表</span>
-          <a href="javascript:;" title="播放列表" ref="pls">{{
+          <a href="javascript:;" title="播放列表" ref="pls" @click="rotate">{{
             songList.length
           }}</a>
         </span>
@@ -108,7 +108,9 @@
             <i class="add"></i>收藏全部
           </a>
           <span class="line"></span>
-          <a href="javascript:;" class="clear"> <i class="del"></i>清除 </a>
+          <a href="javascript:;" class="clear" @click="del">
+            <i class="del"></i>清除
+          </a>
           <p>{{ playText.name }}</p>
           <span class="close" @click="isPlays = false">关闭</span>
         </div>
@@ -183,6 +185,7 @@ export default {
         storeFu();
       }
     };
+
     const isTT = ref(false);
     const isPlays = ref(false);
     const pls = ref(null);
@@ -196,6 +199,13 @@ export default {
     const ms = ref(null);
     const fls = ref(null);
     const modeList = ["mode", "mode1", "mode2"];
+    const del = () => {
+      if (confirm("是否清空列表")) {
+        commit("isTransPlay");
+        emit("pauseAo");
+        state.songList = [];
+      }
+    };
     onMounted(() => {
       let bf = btn.value.parentNode;
       if (state.isVolume == 0) {
@@ -374,6 +384,7 @@ export default {
       isPlays,
       pls,
       fls,
+      del,
     };
   },
 };

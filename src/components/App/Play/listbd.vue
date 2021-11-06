@@ -14,7 +14,7 @@
         <div class="col c2">{{ item.name }}</div>
         <div class="col c3">
           <div class="icns">
-            <i class="del"></i>
+            <i class="del" @click="del(index)" ref="dell"></i>
             <i class="dl"></i>
             <i class="fx"></i>
             <i class="sc"></i>
@@ -94,6 +94,9 @@ export default {
     const pp = ref(null);
     let btnn = ref(null);
     let btnn1 = ref(null);
+    const del = (index) => {
+      state.songList.splice(index, 1);
+    };
     onMounted(async () => {
       btnn = await setInterval(() => {
         hh.value =
@@ -216,49 +219,57 @@ export default {
           }
         };
       };
+      let ao = document.querySelector("audio");
+      ao.addEventListener("play", function () {
+        pp.value.style.top = -pp.value.querySelector(".z_sel").offsetTop + "px";
+        if (ul.value.querySelector(".select")) {
+          if (ul.value.querySelector(".select").offsetTop >= 230) {
+            ul.value.style.top =
+              230 - ul.value.querySelector(".select").offsetTop + "px";
+            btn.value.children[0].style.top =
+              (ul.value.querySelector(".select").offsetTop /
+                ul.value.offsetHeight) *
+                (btn.value.offsetHeight - btn.value.children[0].offsetHeight) +
+              "px";
+          }
+        }
+      });
+      ao.addEventListener("timeupdate", function () {
+        if (pp.value.querySelector(".z_sel")) {
+          btn1.value.children[0].style.top =
+            (pp.value.querySelector(".z_sel").offsetTop /
+              pp.value.offsetHeight) *
+              (btn1.value.offsetHeight - hh1.value) +
+            "px";
+          if (pp.value.querySelector(".z_sel").offsetTop >= 128) {
+            pp.value.style.top =
+              128 - pp.value.querySelector(".z_sel").offsetTop + "px";
+          }
+        }
+      });
     });
     const PLay = async (id, index) => {
-      state.ids = id;
-      state.songListIndex = index;
-      await dispatch("getAudios", state.ids);
-      await dispatch("getPlayText", state.ids);
-      clearInterval(state.tst);
-      const pg = document.querySelector(".c_cur");
-      state.tst = setInterval(() => {
-        pg.style.width =
-          (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
-      }, 1000 / 60);
-      state.isPlay = true;
-      const ao = document.querySelector("audio");
-      if (ao.played) {
-        ao.load();
-        ao.play();
-      } else {
-        ao.play();
-      }
-      let poo = null;
-      ao.onplay = function () {
-        poo = setInterval(() => {
-          if (pp.value.querySelector(".z_sel")) {
-            btn1.value.children[0].style.top =
-              (pp.value.querySelector(".z_sel").offsetTop /
-                pp.value.offsetHeight) *
-                (btn1.value.offsetHeight - hh1.value) +
-              "px";
-            if (pp.value.querySelector(".z_sel").offsetTop >= 128) {
-              pp.value.style.top =
-                128 - pp.value.querySelector(".z_sel").offsetTop + "px";
-            }
-          }
+      if (!ul.value.querySelector(".select")) {
+        state.ids = id;
+        state.songListIndex = index;
+        await dispatch("getAudios", state.ids);
+        await dispatch("getPlayText", state.ids);
+        clearInterval(state.tst);
+        const pg = document.querySelector(".c_cur");
+        state.tst = setInterval(() => {
+          pg.style.width =
+            (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
         }, 1000 / 60);
-      };
-      ao.onpause = function () {
-        clearInterval(poo);
-        document.title = state.title;
-      };
-      document.querySelector("audio").addEventListener("play", function () {});
+        state.isPlay = true;
+        let ao = document.querySelector("audio");
+        if (ao.played) {
+          ao.load();
+          ao.play();
+        } else {
+          ao.play();
+        }
+      }
     };
-
     onBeforeUnmount(() => {
       clearInterval(btnn);
       clearInterval(btnn1);
@@ -274,6 +285,7 @@ export default {
       hh1,
       pp,
       NT,
+      del,
     };
   },
 };

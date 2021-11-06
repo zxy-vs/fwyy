@@ -22,7 +22,7 @@ import Header from "./components/App/Header.vue";
 import Footer from "./components/App/Footer.vue";
 import Play from "./components/App/Play.vue";
 import { ref, toRefs } from "@vue/reactivity";
-import { onMounted } from "@vue/runtime-core";
+import { onBeforeUnmount, onMounted } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 export default {
@@ -49,23 +49,6 @@ export default {
       storeFu();
     };
     onMounted(() => {
-      let poo1 = null;
-      const ulll = document.querySelector(".f_cbss");
-      ao.value.addEventListener("ended", function () {
-        poo1 = setInterval(() => {
-          if (ulll.querySelector(".select")) {
-            document.querySelector(".bline").children[0].style.top =
-              (ulll.querySelector(".select").offsetTop / ulll.offsetHeight) *
-                (document.querySelector(".bline").offsetHeight -
-                  document.querySelector(".bline").children[0].offsetHeight) +
-              "px";
-          }
-          if (ulll.querySelector(".select").offsetTop >= 230) {
-            ulll.style.top =
-              230 - ulll.querySelector(".select").offsetTop + "px";
-          }
-        }, 1000 / 60);
-      });
       ao.value.ontimeupdate = function () {
         state.currentTime = this.currentTime;
         this.volume = state.isVolume;
