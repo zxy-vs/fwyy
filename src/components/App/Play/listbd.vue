@@ -6,7 +6,6 @@
         :class="state.ids == item.id ? 'select' : ''"
         v-for="(item, index) of state.songList"
         :key="index"
-        @click="PLay(item.id, index)"
       >
         <div class="col c1">
           <span class="icon"></span>
@@ -14,7 +13,7 @@
         <div class="col c2">{{ item.name }}</div>
         <div class="col c3">
           <div class="icns">
-            <i class="del" @click="del(index)" ref="dell"></i>
+            <i class="del" @click="del(index)"></i>
             <i class="dl"></i>
             <i class="fx"></i>
             <i class="sc"></i>
@@ -94,8 +93,23 @@ export default {
     const pp = ref(null);
     let btnn = ref(null);
     let btnn1 = ref(null);
-    const del = (index) => {
+    const del = async (index) => {
       state.songList.splice(index, 1);
+      if (ul.value.children[index] == ul.value.querySelector(".select")) {
+        state.ids = state.songList[index].id;
+        state.songListIndex = index;
+        await dispatch("getAudios", state.ids);
+        await dispatch("getPlayText", state.ids);
+        clearInterval(state.tst);
+        const pg = document.querySelector(".c_cur");
+        state.tst = setInterval(() => {
+          pg.style.width =
+            (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+        }, 1000 / 60);
+        state.isPlay = true;
+        let ao = document.querySelector("audio");
+        ao.play();
+      }
     };
     onMounted(async () => {
       btnn = await setInterval(() => {
@@ -247,29 +261,35 @@ export default {
           }
         }
       });
-    });
-    const PLay = async (id, index) => {
-      if (!ul.value.querySelector(".select")) {
-        state.ids = id;
-        state.songListIndex = index;
-        await dispatch("getAudios", state.ids);
-        await dispatch("getPlayText", state.ids);
-        clearInterval(state.tst);
-        const pg = document.querySelector(".c_cur");
-        state.tst = setInterval(() => {
-          pg.style.width =
-            (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
-        }, 1000 / 60);
-        state.isPlay = true;
-        let ao = document.querySelector("audio");
-        if (ao.played) {
-          ao.load();
-          ao.play();
-        } else {
-          ao.play();
-        }
+      for (let i = 0; i < ul.value.children.length; i++) {
+        ul.value.children[i].addEventListener("click", async (e) => {
+          if (
+            e.target.getAttribute("class") != "del" ||
+            e.target.getAttribute("class") != "dl" ||
+            e.target.getAttribute("class") != "fx" ||
+            e.target.getAttribute("class") != "sc"
+          ) {
+            state.ids = state.songList[i].id;
+            state.songListIndex = i;
+            await dispatch("getAudios", state.ids);
+            await dispatch("getPlayText", state.ids);
+            clearInterval(state.tst);
+            const pg = document.querySelector(".c_cur");
+            state.tst = setInterval(() => {
+              pg.style.width =
+                (100 / parseInt(state.time / 1000)) * state.currentTime + "%";
+            }, 1000 / 60);
+            state.isPlay = true;
+            if (ao.played) {
+              ao.load();
+              ao.play();
+            } else {
+              ao.play();
+            }
+          }
+        });
       }
-    };
+    });
     onBeforeUnmount(() => {
       clearInterval(btnn);
       clearInterval(btnn1);
@@ -277,7 +297,6 @@ export default {
     return {
       state,
       Times,
-      PLay,
       ul,
       btn,
       btn1,
